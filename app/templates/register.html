@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{%block title%}Register{%endblock%}
+{% block form %}
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+<a id="back" role="button" class="btn btn-outline-secondary" href="{{url_for('user.login')}}"><</a>
+<form action="{{ url_for('user.register') }}" method="POST">
+  <div class="md-3">
+    <label for="exampleInputEmail1" class="form-label">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" />
+    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="md-3 row">
+    <label for="exampleCaptcha" class="form-label">Captcha</label>
+    <div class="col-6">
+      <input type="text" class="form-control" id="exampleCaptcha" name="captcha" />
+    </div>
+    <div class="col-6 d-grid">
+      <button type="button" class="btn btn-primary" id="captcha-btn">Get captcha</button>
+    </div>
+  </div>
+  <div class="md-3">
+    <label for="userName" class="form-label">User name</label>
+    <input type="text" class="form-control" id="userName" name="username" />
+  </div>
+  <div class="md-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" class="form-control" id="password" name="password" />
+  </div>
+  <div class="md-3">
+    <label for="password_confirm" class="form-label">Password confirm</label>
+    <input type="password" class="form-control" id="password_confirm" name="password_confirm" />
+  </div>
+  <div class="col-12 d-grid">
+    <label class="form-label"></label>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </div>
+</form>
+{% endblock %}
