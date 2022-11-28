@@ -1,10 +1,8 @@
 from app import db
 from flask import Blueprint, request, render_template, redirect, url_for
-
 from app.models import UserModel
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
-
 
 @bp.route("/delete_user", methods=["POST"])
 def delete_user():

@@ -98,7 +98,6 @@ def login():
             print("not valid")
             return redirect(url_for("user.login"))
 
-
 @bp.route('/logout', methods=['POST'])
 def logout():
     id = session.get("id")
@@ -111,7 +110,6 @@ def logout():
         return jsonify({"code": 200})
     else:
         return jsonify({"code": 400, "message": "登出失败"})
-
 
 @bp.route('/captcha', methods=['POST'])
 def get_captcha():
@@ -142,7 +140,6 @@ def get_captcha():
         return jsonify({"code": 200})
     else:
         return jsonify({"code": 400, "message": "没有传递邮箱"})
-
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():
