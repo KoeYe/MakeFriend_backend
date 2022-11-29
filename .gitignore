@@ -1,3 +1,4 @@
 config.py
 /migrations
 README.md
+/log

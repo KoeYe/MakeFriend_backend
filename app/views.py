@@ -7,8 +7,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message, Mail
 import string
 
+
 from app.blueprints.forms import CalculatorForm
 from .models import UserModel, EmailCaptchaModel
+
+
 
 @app.route('/index/?<username>&<id>')
 def index(username, id):

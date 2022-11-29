@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from flask_mail import Message
 from app.blueprints.admin import show_all_user
 from app.blueprints.forms import LoginForm, RegisterForm
+from flask_restful import Resource, Api
 import string
 from app import db, mail
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,8 +14,46 @@ from app.models import EmailCaptchaModel, UserModel
 
 # 注册了一个bp，名字叫user，前置路径是/user
 bp = Blueprint("user", __name__, url_prefix="/user")
+# 将bp挂载到api上
+api = Api(bp)
 
+class Captcha(Resource):
+    def post(self):
+        # print(request.json)
+        email = request.json.get("email")
+        operation = request.json.get("operation")
+        letters = string.ascii_letters + string.digits
+        captcha = "".join(random.sample(letters, 4))
+        # print(email)
+        if email:
+            print("验证码:" + captcha)
+            message = Message(
+                subject="Captcha Sending",
+                recipients=[email],
+                html=render_template(
+                    'captcha.html', operation=operation, captcha=captcha),
+                charset='utf-8'
+            )
+            mail.send(message)
+            captcha_model = EmailCaptchaModel.query.filter_by(email=email).first()
+            if captcha_model:
+                captcha_model.captcha = captcha
+                captcha_model.create_time = datetime.now()
+                db.session.commit()
+            else:
+                captcha_model = EmailCaptchaModel(email=email, captcha=captcha)
+                db.session.add(captcha_model)
+                db.session.commit()
+            return "Send captcha successfully!", 200
+        else:
+            return "Please enter your email address!", 400
 
+class Test(Resource):
+    def get(self):
+        return "test", 200
+
+api.add_resource(Test, "/test")
+api.add_resource(Captcha, "/captcha")
 @bp.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'GET':
@@ -111,35 +150,7 @@ def logout():
     else:
         return jsonify({"code": 400, "message": "登出失败"})
 
-@bp.route('/captcha', methods=['POST'])
-def get_captcha():
-    email = request.values.get("email")
-    operation = request.values.get("operation")
-    letters = string.ascii_letters + string.digits
-    captcha = "".join(random.sample(letters, 4))
-    if email:
-        print("验证码:" + captcha)
-        message = Message(
-            subject="[测试]测试验证码发送",
-            recipients=[email],
-            html=render_template(
-                'captcha.html', operation=operation, captcha=captcha),
-            charset='utf-8'
-            # body="hi"
-        )
-        mail.send(message)
-        captcha_model = EmailCaptchaModel.query.filter_by(email=email).first()
-        if captcha_model:
-            captcha_model.captcha = captcha
-            captcha_model.create_time = datetime.now()
-            db.session.commit()
-        else:
-            captcha_model = EmailCaptchaModel(email=email, captcha=captcha)
-            db.session.add(captcha_model)
-            db.session.commit()
-        return jsonify({"code": 200})
-    else:
-        return jsonify({"code": 400, "message": "没有传递邮箱"})
+
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():
