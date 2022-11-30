@@ -52,9 +52,10 @@ class Test(Resource):
     def get(self):
         return "test", 200
 
+# 注册
 class Register(Resource):
     def post(self):
-        print(request.json)
+        # print(request.json)
         form = RegisterForm.from_json(request.json)
         # print(form.email.data)
         if form.validate():
@@ -80,29 +81,15 @@ class Register(Resource):
             print("注册失败")
             return "Register failed!", 400
 
-api.add_resource(Test, "/test")
-api.add_resource(Captcha, "/captcha")
-api.add_resource(Register, "/register")
-
-@bp.route('/login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'GET':
-        print('get')
-        email = session.get('email')
-        password = session.get('password')
-        if email != None and password != None:
-            print("email:", email)
-            print("password:", password)
-            return render_template("login.html", email=email, password=password)
-        else:
-            return render_template("login.html")
-    else:
-        form = LoginForm(request.form)
+# 登陆
+class Login(Resource):
+    def post(self):
+        form = LoginForm.from_json(request.json)
         if form.validate():
-            email = request.values.get("email")
-            password = request.values.get("password")
+            email = request.json.get("email")
+            password = request.json.get("password")
             if email == "admin@admin.com" and password == "admin":
-                return redirect(url_for("admin.show_all_user"))
+                return "admin", 301
             user_model = UserModel.query.filter_by(email=email).first()
             if user_model:
                 if check_password_hash(user_model.password, password):
@@ -122,20 +109,52 @@ def login():
                     print("id in session:",session.get("id"))
                     admin = user_model.admin
                     if admin:
-                        return redirect(url_for("admin.show_all_user"))
+                        return "admin", 301
                     else:
                         # return jsonify({"code": 200})
-                        return redirect(url_for("index", username=user_model.username, id=user_model.id))
+                        return "Login successfully!", 200
                 else:
                     # print(url_for("user.login"))
                     print("密码不正确")
-                    return redirect(url_for("user.login", email=email, password=password))
+                    return "Email or password incorrect!", 400
             else:
-                return jsonify({"code": 400, "message": "用户不存在"})
+                return "Email or password incorrect!", 400
         else:
             # print(url_for("user.login"))
             print("not valid")
-            return redirect(url_for("user.login"))
+            return "Please input form correctly!", 400
+
+
+class ForgetPassword(Resource):
+    def post(self):
+        try:
+            email  = request.json.get('email')
+            user = UserModel.query.filter_by(email=email).first()
+        except:
+            return "invalid email address", 400
+        captcha = request.json.get("captcha")
+        email = user.email
+        captcha_model = EmailCaptchaModel.query.filter_by(email=email).first()
+        if not captcha_model or captcha_model.captcha.lower() != captcha.lower():
+            return "Incorrect captcha", 400
+        new_password = request.json.get("password")
+        password_confirm = request.json.get("password_confirm")
+        if not new_password == password_confirm:
+            print(new_password)
+            print(password_confirm)
+            return "Please confirm your new password", 400
+        hash_password = generate_password_hash(new_password)  # 存入hash形式的密码
+        user.password = hash_password
+        db.session.commit()
+        print("修改密码成功")
+        session.permanent = True
+        return "Change password successfully!", 200
+
+api.add_resource(Test, "/test")
+api.add_resource(Captcha, "/captcha")
+api.add_resource(Register, "/register")
+api.add_resource(Login, "/login")
+api.add_resource(ForgetPassword, "/forget_password")
 
 @bp.route('/logout', methods=['POST'])
 def logout():
