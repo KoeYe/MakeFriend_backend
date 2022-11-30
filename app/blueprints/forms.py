@@ -1,11 +1,12 @@
 import wtforms
 from flask_wtf import FlaskForm
+import wtforms_json
 from wtforms.validators import DataRequired, length, email, EqualTo
 
 from app.models import EmailCaptchaModel, UserModel
 # from models import EmailCaptchaModel, UserModel
 
-
+wtforms_json.init()
 class CalculatorForm(FlaskForm):
     number1 = wtforms.IntegerField('number1', validators=[DataRequired()])
     number2 = wtforms.IntegerField('number2', validators=[DataRequired()])
@@ -26,14 +27,20 @@ class RegisterForm(wtforms.Form):
     def validate_captcha(self, field):
         captcha = field.data
         email = self.email.data
+        # print(email)
         captcha_model = EmailCaptchaModel.query.filter_by(email=email).first()
         if not captcha_model or captcha_model.captcha.lower() != captcha.lower():
+            print(captcha_model)
+            # print(captcha_model.captcha.lower())
+            # print(captcha.lower())
+            print("邮箱验证码错误！")
             raise wtforms.ValidationError("邮箱验证码错误！")
 
     def validate_email(self, field):
         email = field.data
         user_model = UserModel.query.filter_by(email=email).first()
         if user_model:
+            print("邮箱已经存在！")
             raise wtforms.ValidationError("邮箱已经存在！")
 
 

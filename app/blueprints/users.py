@@ -52,15 +52,11 @@ class Test(Resource):
     def get(self):
         return "test", 200
 
-api.add_resource(Test, "/test")
-api.add_resource(Captcha, "/captcha")
-@bp.route('/register', methods=['POST', 'GET'])
-def register():
-    if request.method == 'GET':
-        return render_template("register.html")
-    else:
-        print(request.form)
-        form = RegisterForm(request.form)
+class Register(Resource):
+    def post(self):
+        print(request.json)
+        form = RegisterForm.from_json(request.json)
+        # print(form.email.data)
         if form.validate():
             email = form.email.data
             username = form.username.data
@@ -79,10 +75,14 @@ def register():
             session['email'] = email
             session['password'] = password
             session.permanent = True
-            return redirect(url_for("user.login"))
+            return "Register Successfully!", 200
         else:
             print("注册失败")
-            return redirect((url_for("user.register")))
+            return "Register failed!", 400
+
+api.add_resource(Test, "/test")
+api.add_resource(Captcha, "/captcha")
+api.add_resource(Register, "/register")
 
 @bp.route('/login', methods=['POST', 'GET'])
 def login():
@@ -149,8 +149,6 @@ def logout():
         return jsonify({"code": 200})
     else:
         return jsonify({"code": 400, "message": "登出失败"})
-
-
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():

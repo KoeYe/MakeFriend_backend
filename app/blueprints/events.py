@@ -296,8 +296,6 @@ def search():
                     print(events)
                     return jsonify({'code':200, 'message':render_template('show_event.html',user=user, events=events, list_id=0, com = '0')})
 
-
-
 @bp.route('/get_counts', methods=['POST'])
 def get_counts():
     com_num = 0

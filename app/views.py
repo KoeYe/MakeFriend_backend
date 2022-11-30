@@ -11,8 +11,6 @@ import string
 from app.blueprints.forms import CalculatorForm
 from .models import UserModel, EmailCaptchaModel
 
-
-
 @app.route('/index/?<username>&<id>')
 def index(username, id):
     user = {
