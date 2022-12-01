@@ -112,7 +112,7 @@ class Login(Resource):
                         return "admin", 301
                     else:
                         # return jsonify({"code": 200})
-                        return "Login successfully!", 200
+                        return jsonify({"message": "Login successfully!", "id":id, "username": user_model.username, "code":200})
                 else:
                     # print(url_for("user.login"))
                     print("密码不正确")
@@ -150,24 +150,25 @@ class ForgetPassword(Resource):
         session.permanent = True
         return "Change password successfully!", 200
 
+class Logout(Resource):
+    def post(self):
+        id = session.get("id")
+        print("id: ", id)
+        user = UserModel.query.filter_by(id=id).first()
+        if id:
+            session.pop('id')
+            user.state = False
+            db.session.commit()
+            return "Logout successfully!", 200
+        else:
+            return "Logout failed", 400
+
 api.add_resource(Test, "/test")
 api.add_resource(Captcha, "/captcha")
 api.add_resource(Register, "/register")
 api.add_resource(Login, "/login")
+api.add_resource(Logout, "/logout")
 api.add_resource(ForgetPassword, "/forget_password")
-
-@bp.route('/logout', methods=['POST'])
-def logout():
-    id = session.get("id")
-    print(id)
-    user = UserModel.query.filter_by(id=id).first()
-    if id:
-        session.pop('id')
-        user.state = False
-        db.session.commit()
-        return jsonify({"code": 200})
-    else:
-        return jsonify({"code": 400, "message": "登出失败"})
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():

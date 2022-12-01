@@ -5,11 +5,29 @@ from app import app, db, mail
 # from blueprints.forms import CalculatorForm, RegisterForm, LoginForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message, Mail
+from flask_restful import Resource, Api
 import string
 
 
 from app.blueprints.forms import CalculatorForm
 from .models import UserModel, EmailCaptchaModel
+api = Api(app)
+
+class Search(Resource):
+    def post(self):
+        search_content = request.json.get("search_content")
+        users = UserModel.query.filter(UserModel.username.like('%{0}%'.format(search_content))).all()
+        users_ret = []
+        for user in users:
+            users_ret.append({"username":user.username,"id": user.id})
+            if len(users_ret) == 5:
+                break # 只取前5个
+        if len(users) == 0:
+            return jsonify({"find":0})
+        else:
+            return jsonify({"find":len(users_ret),"users": users_ret})
+
+api.add_resource(Search, "/search")
 
 @app.route('/index/?<username>&<id>')
 def index(username, id):
@@ -73,12 +91,6 @@ def home():
     user = UserModel.query.filter(UserModel.id==id).first()
     print(url_for('index', username=user.username, id=id))
     return url_for('index', username=user.username, id=id)
-
-@app.route("/search", methods=["GET"])
-def search():
-    id = session.get("id")
-    user = UserModel.query.filter(UserModel.id==id).first()
-    return url_for('search', username=user.username, id=id)
 
 @app.route("/echart", methods=["GET"])
 def echart():

@@ -12,6 +12,14 @@ class UserModel(db.Model):
     register_datetime = db.Column(db.DateTime, default=datetime.now)
     state = db.Column(db.Boolean, default=False)
     todo_list = db.relationship('TodoListModel', backref='user', uselist=True)
+    friend_list = db.relationship('FriendListModel', backref='user', uselist=True)
+
+class FriendListModel(db.Model):
+    '''好友表'''
+    __tablename__ = 'friend'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    friend_id = db.Column(db.Integer)
 
 class EmailCaptchaModel(db.Model):
     __tablename__ = "email_captcha"
