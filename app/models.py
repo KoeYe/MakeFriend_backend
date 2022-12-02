@@ -11,15 +11,39 @@ class UserModel(db.Model):
     admin = db.Column(db.Boolean, default=False)
     register_datetime = db.Column(db.DateTime, default=datetime.now)
     state = db.Column(db.Boolean, default=False)
-    todo_list = db.relationship('TodoListModel', backref='user', uselist=True)
-    friend_list = db.relationship('FriendListModel', backref='user', uselist=True)
+    friends_id = db.Column(db.Integer, db.ForeignKey('friend.id'))
+    # friends = db.relationship('FriendListModel', backref='user', uselist=True, foreign_keys=[friends_id])
 
 class FriendListModel(db.Model):
     '''好友表'''
     __tablename__ = 'friend'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    friend_id = db.Column(db.Integer)
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id') )
+    session_id = db.Column(db.Integer, db.ForeignKey('session.id'))
+    # session = db.relationship('SessionModel', backref='friend', uselist=True, foreign_keys=[session_id])
+
+class SessionModel(db.Model):
+    '''会话表'''
+    __tablename__ = 'session'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user1_id = db.Column(db.Integer)
+    user2_id = db.Column(db.Integer)
+    # message_history = db.relationship('MessageModel', backref='session', uselist=True)
+
+class MessageModel(db.Model):
+    __tablename__ = 'message'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    session_id = db.Column(db.Integer, db.ForeignKey('session.id'))
+    content = db.Column(db.String(200))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    year = db.Column(db.Integer)
+    month= db.Column(db.Integer)
+    day = db.Column(db.Integer)
+    hour = db.Column(db.Integer)
+    min = db.Column(db.Integer)
+    sec = db.Column(db.Integer)
+    state = db.Column(db.Integer)
 
 class EmailCaptchaModel(db.Model):
     __tablename__ = "email_captcha"
@@ -27,42 +51,4 @@ class EmailCaptchaModel(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     captcha = db.Column(db.String(10), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.now)
-
-class TodoListModel(db.Model):
-    '''事项列表 表'''
-    __tablename__ = "todo_list"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    list_name = db.Column(db.String(20),unique=False)
-    limit = db.Column(db.Integer)
-    events = db.relationship('EventModel', backref='todo_list', uselist=True)
-
-class EventModel(db.Model):
-    '''事项表'''
-    __tablename__ = "event"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    todo_list_id = db.Column(db.Integer, db.ForeignKey('todo_list.id'))
-    title = db.Column(db.String(20))
-    content = db.Column(db.Text(100))
-    label = db.Column(db.Integer)
-    create_datetime = db.Column(db.DateTime)
-    setting_year = db.Column(db.Integer)
-    setting_month = db.Column(db.Integer)
-    setting_date = db.Column(db.Integer)
-    setting_time = db.Column(db.Time)
-    duration = db.Column(db.Integer)
-    gone_days = db.Column(db.Integer)
-    finished = db.Column(db.Boolean, default=False)
-    finished_datetime = db.Column(db.DateTime, nullable=True)
-    url = db.Column(db.String(500))
-
-class Tasks(db.Model):
-    '''任务表'''
-    __tablename__ = "task"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
-    task_name = db.Column(db.String(100))
-    finished = db.Column(db.Boolean, default=False)
 
