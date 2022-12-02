@@ -36,5 +36,10 @@ class SetSession(Resource):
         session_id = session.id
         user1 = UserModel.query.filter(UserModel.id==user1_id).first()
         return jsonify({"session_id": session_id, "user1_name": user1.username})
+    def get(self):
+        session_id = request.values.get("session_id")
+        print(session_id)
+        session = SessionModel.query.filter(SessionModel.id==session_id).first()
+        return jsonify({"session_id":session.id, "user1_id": session.user1_id, "user2_id":session.user2_id})
 
 api.add_resource(SetSession, "/session")
