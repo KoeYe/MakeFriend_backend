@@ -163,12 +163,22 @@ class Logout(Resource):
         else:
             return "Logout failed", 400
 
+
+class GetUserName(Resource):
+    def get(self):
+        user_id = request.values.get("id")
+        print("user_id: ", user_id)
+        user = UserModel.query.filter(UserModel.id==user_id).first()
+        username = user.username
+        return username, 200
+
 api.add_resource(Test, "/test")
 api.add_resource(Captcha, "/captcha")
 api.add_resource(Register, "/register")
 api.add_resource(Login, "/login")
 api.add_resource(Logout, "/logout")
 api.add_resource(ForgetPassword, "/forget_password")
+api.add_resource(GetUserName, "/username")
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():
