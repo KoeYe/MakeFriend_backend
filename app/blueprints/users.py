@@ -9,8 +9,8 @@ from flask_restful import Resource, Api
 import string
 from app import db, mail
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from app.models import EmailCaptchaModel, UserModel
+from sqlalchemy import and_, or_
+from app.models import EmailCaptchaModel, UserModel, FriendListModel
 
 # 注册了一个bp，名字叫user，前置路径是/user
 bp = Blueprint("user", __name__, url_prefix="/user")
@@ -172,6 +172,52 @@ class GetUserName(Resource):
         username = user.username
         return username, 200
 
+class MakeFriends(Resource):
+    def post(self):
+        user1_id = str(request.json.get("user1_id"))
+        user2_id = request.json.get("user2_id")
+        if user1_id==user2_id:
+            return "You can't make friend with yourself", 400
+        session_id = request.json.get("session_id")
+        friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
+        if friendship:
+            return "he/she has been your friend!", 400
+        else:
+            n_friendship = FriendListModel(
+                user_id = user2_id,
+                friend_id = user1_id,
+                session_id = session_id
+            )
+            try:
+                db.session.add(n_friendship)
+                db.session.commit()
+            except Exception as e:
+                return e, 400
+            return "Add friend successfully!", 200
+
+    def get(self):
+        user1_id = request.values.get("user1_id")
+        user2_id = request.values.get("user2_id")
+        friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
+        if friendship:
+            return 1
+        else:
+            return 0
+
+    def delete(self):
+        user1_id = request.values.get("user1_id")
+        user2_id = request.values.get("user2_id")
+        friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
+        if friendship:
+            try:
+                db.session.delete(friendship)
+                db.session.commit()
+                return "Delete friend successfully!", 200
+            except Exception as e:
+                return e, 200
+        else:
+            return "He is not your friend", 400
+
 api.add_resource(Test, "/test")
 api.add_resource(Captcha, "/captcha")
 api.add_resource(Register, "/register")
@@ -179,6 +225,7 @@ api.add_resource(Login, "/login")
 api.add_resource(Logout, "/logout")
 api.add_resource(ForgetPassword, "/forget_password")
 api.add_resource(GetUserName, "/username")
+api.add_resource(MakeFriends, "/make_friend")
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():
