@@ -218,6 +218,24 @@ class MakeFriends(Resource):
         else:
             return "He is not your friend", 400
 
+class Friends(Resource):
+    def get(self):
+        id = request.values.get("user2_id")
+        Friends = FriendListModel.query.filter(or_(FriendListModel.user_id==id, FriendListModel.friend_id==id)).all()
+        friends_id_list = []
+        for friend in Friends:
+            if id == friend.friend_id:
+                friends_id_list.append(friend.user_id)
+            else:
+                friends_id_list.append(friend.friend_id)
+        friends_list = []
+        for f_id in friends_id_list:
+            user = UserModel.query.filter(UserModel.id==f_id).first()
+            friends_list.append({"username": user.username, "id": user.id})
+        return jsonify({"find":len(friends_list),"friends": friends_list})
+
+
+
 api.add_resource(Test, "/test")
 api.add_resource(Captcha, "/captcha")
 api.add_resource(Register, "/register")
@@ -226,6 +244,7 @@ api.add_resource(Logout, "/logout")
 api.add_resource(ForgetPassword, "/forget_password")
 api.add_resource(GetUserName, "/username")
 api.add_resource(MakeFriends, "/make_friend")
+api.add_resource(Friends, "/friends")
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():
