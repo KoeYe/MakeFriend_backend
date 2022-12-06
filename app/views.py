@@ -27,7 +27,7 @@ class Search(Resource):
         else:
             return jsonify({"find":len(users_ret),"users": users_ret})
 
-api.add_resource(Search, "/search")
+api.add_resource(Search, "/api/search")
 
 @app.route('/index/?<username>&<id>')
 def index(username, id):

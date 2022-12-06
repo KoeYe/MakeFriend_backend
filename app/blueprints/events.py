@@ -12,7 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import EmailCaptchaModel, UserModel, EventModel, TodoListModel
 
 # 注册了一个bp，名字叫event，前置路径是/event
-bp = Blueprint("event", __name__, url_prefix="/event")
+bp = Blueprint("event", __name__, url_prefix="/api/event")
 
 @bp.route('/add_event', methods=['POST', 'GET'])
 def add_event():

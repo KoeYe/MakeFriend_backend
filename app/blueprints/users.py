@@ -13,7 +13,7 @@ from sqlalchemy import and_, or_
 from app.models import EmailCaptchaModel, UserModel, FriendListModel
 
 # 注册了一个bp，名字叫user，前置路径是/user
-bp = Blueprint("user", __name__, url_prefix="/user")
+bp = Blueprint("user", __name__, url_prefix="/api/user")
 # 将bp挂载到api上
 api = Api(bp)
 
@@ -164,7 +164,7 @@ class Logout(Resource):
             return "Logout failed", 400
 
 
-class GetUserName(Resource):
+class UserName(Resource):
     def get(self):
         user_id = request.values.get("id")
         print("user_id: ", user_id)
@@ -172,7 +172,7 @@ class GetUserName(Resource):
         username = user.username
         return username, 200
 
-class MakeFriends(Resource):
+class theFriends(Resource):
     def post(self):
         user1_id = str(request.json.get("user1_id"))
         user2_id = request.json.get("user2_id")
@@ -198,7 +198,9 @@ class MakeFriends(Resource):
     def get(self):
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
-        friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
+        print("1:",user1_id, "2:",user2_id)
+        friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id),
+                                                and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
         if friendship:
             return 1
         else:
@@ -221,10 +223,11 @@ class MakeFriends(Resource):
 class Friends(Resource):
     def get(self):
         id = request.values.get("user2_id")
+        # print(id)
         Friends = FriendListModel.query.filter(or_(FriendListModel.user_id==id, FriendListModel.friend_id==id)).all()
         friends_id_list = []
         for friend in Friends:
-            if id == friend.friend_id:
+            if str(id) == str(friend.friend_id):
                 friends_id_list.append(friend.user_id)
             else:
                 friends_id_list.append(friend.friend_id)
@@ -242,8 +245,8 @@ api.add_resource(Register, "/register")
 api.add_resource(Login, "/login")
 api.add_resource(Logout, "/logout")
 api.add_resource(ForgetPassword, "/forget_password")
-api.add_resource(GetUserName, "/username")
-api.add_resource(MakeFriends, "/make_friend")
+api.add_resource(UserName, "/username")
+api.add_resource(theFriends, "/make_friend")
 api.add_resource(Friends, "/friends")
 
 @bp.route("/change_password", methods=['GET', 'POST'])
