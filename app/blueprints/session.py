@@ -56,6 +56,9 @@ class Message(Resource):
         his_messages = []
         for message in messages:
             his_messages.append({"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
+        if len(his_messages) > 50:
+            for i in range(len(his_messages)-50):
+                his_messages.pop()
         return jsonify({"messages":his_messages})
     def post(self):
         session_id = request.json.get("session_id")

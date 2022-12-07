@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 from this import s
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response
 from flask_mail import Message
 from app.blueprints.admin import show_all_user
 from app.blueprints.forms import LoginForm, RegisterForm
@@ -237,7 +237,21 @@ class Friends(Resource):
             friends_list.append({"username": user.username, "id": user.id})
         return jsonify({"find":len(friends_list),"friends": friends_list})
 
-
+class Avatar(Resource):
+    def post(self):
+        file = request.files.get('file')
+        user_id = session.get('id')
+        file_name = str(user_id) + ".jpg"
+        file.save("./asset/avatar/"+file_name)
+        return "Successfully!", 200
+    def get(self):
+        uid = request.args.get('id')
+        img_local_path = "./asset/avatar/" + uid + ".jpg"
+        img_f = open(img_local_path, 'rb')
+        res = make_response(img_f.read())   # 用flask提供的make_response 方法来自定义自己的response对象
+        res.headers['Content-Type'] = 'image/jpg'   # 设置response对象的请求头属性'Content-Type'为图片格式
+        img_f.close()
+        return res
 
 api.add_resource(Test, "/test")
 api.add_resource(Captcha, "/captcha")
@@ -248,6 +262,7 @@ api.add_resource(ForgetPassword, "/forget_password")
 api.add_resource(UserName, "/username")
 api.add_resource(theFriends, "/make_friend")
 api.add_resource(Friends, "/friends")
+api.add_resource(Avatar, "/avatar")
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():
