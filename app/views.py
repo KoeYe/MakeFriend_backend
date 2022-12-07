@@ -8,18 +8,27 @@ from flask_mail import Message, Mail
 from flask_restful import Resource, Api
 import string
 
-
+from sqlalchemy import or_, and_
 from app.blueprints.forms import CalculatorForm
-from .models import UserModel, EmailCaptchaModel
+from .models import UserModel, EmailCaptchaModel, SessionModel, MessageModel
 api = Api(app)
 
 class Search(Resource):
     def post(self):
         search_content = request.json.get("search_content")
+        id = session.get('id')
         users = UserModel.query.filter(UserModel.username.like('%{0}%'.format(search_content))).all()
         users_ret = []
         for user in users:
-            users_ret.append({"username":user.username,"id": user.id})
+            session_ = SessionModel.query.filter(or_(and_(SessionModel.user1_id==id, SessionModel.user2_id==user.id),and_(SessionModel.user2_id==id, SessionModel.user1_id==user.id))).first()
+            if session:
+                last_massage = MessageModel.query.filter(MessageModel.session_id==session_.id).order_by(-MessageModel.id).first()
+                if last_massage:
+                    users_ret.append({"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
+                else:
+                    users_ret.append({"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
+            else:
+                users_ret.append({"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
             if len(users_ret) == 5:
                 break # 只取前5个
         if len(users) == 0:

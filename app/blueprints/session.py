@@ -36,6 +36,7 @@ class SetSession(Resource):
         session_id = session.id
         user1 = UserModel.query.filter(UserModel.id==user1_id).first()
         return jsonify({"session_id": session_id, "user1_name": user1.username})
+
     def get(self):
         session_id = request.values.get("session_id")
         # print(session_id)
@@ -57,9 +58,10 @@ class Message(Resource):
         for message in messages:
             his_messages.append({"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
         if len(his_messages) > 50:
-            for i in range(len(his_messages)-50):
-                his_messages.pop()
+            for i in range(0, len(his_messages)-50):
+                his_messages.pop(i)
         return jsonify({"messages":his_messages})
+
     def post(self):
         session_id = request.json.get("session_id")
         content = request.json.get("content")
