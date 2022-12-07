@@ -43,6 +43,11 @@ class RegisterForm(wtforms.Form):
             print("邮箱已经存在！")
             raise wtforms.ValidationError("邮箱已经存在！")
 
+class ProfileForm(wtforms.Form):
+    username = wtforms.StringField(validators=[length(min=1, max=20)])
+    address = wtforms.StringField(validators=[length(min=1, max=200)])
+    place = wtforms.StringField(validators=[length(min=1, max=20)])
+    tel = wtforms.StringField(validators=[length(min=1, max=20)])
 
 class EventForm(wtforms.Form):
     event_name = wtforms.StringField(validators=[length(min=1, max=50)])

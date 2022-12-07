@@ -4,7 +4,7 @@ from this import s
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response
 from flask_mail import Message
 from app.blueprints.admin import show_all_user
-from app.blueprints.forms import LoginForm, RegisterForm
+from app.blueprints.forms import LoginForm, RegisterForm, ProfileForm
 from flask_restful import Resource, Api
 import string
 from app import db, mail
@@ -255,6 +255,42 @@ class Avatar(Resource):
         img_f.close()
         return res
 
+class Profile(Resource):
+    def get(self):
+        id = request.args.get('id')
+        user = UserModel.query.filter(UserModel.id==id).first()
+        return jsonify({
+            "username" : user.username,
+            "address" : user.address,
+            "tel" : user.tel,
+            "remarks": user.remarks,
+            "place": user.place,
+        })
+    def post(self):
+        print(request.json)
+        form = ProfileForm.from_json(request.json)
+        if form.validate():
+            id = request.json.get('id')
+            user = UserModel.query.filter(UserModel.id==id).first()
+            username = form.username.data
+            tel = form.tel.data
+            address = form.address.data
+            place = form.place.data
+            remarks = request.json.get('remarks')
+            user.address = address
+            user.place = place
+            user.remarks = remarks
+            user.tel = tel
+            user.username = username
+            try:
+                db.session.commit()
+                return "Edit Profile Successfully!", 200
+            except Exception as e:
+                return e, 400
+        else:
+            return "Invalid input", 400
+
+
 api.add_resource(Test, "/test")
 api.add_resource(Captcha, "/captcha")
 api.add_resource(Register, "/register")
@@ -265,6 +301,7 @@ api.add_resource(UserName, "/username")
 api.add_resource(theFriends, "/make_friend")
 api.add_resource(Friends, "/friends")
 api.add_resource(Avatar, "/avatar")
+api.add_resource(Profile, "/profile")
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():

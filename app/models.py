@@ -12,6 +12,10 @@ class UserModel(db.Model):
     register_datetime = db.Column(db.DateTime, default=datetime.now)
     state = db.Column(db.Boolean, default=False)
     friends_id = db.Column(db.Integer, db.ForeignKey('friend.id'))
+    address = db.Column(db.String(200), default="Nowhere")
+    remarks= db.Column(db.Integer, default="0")
+    place = db.Column(db.String(200), default="Secret")
+    tel = db.Column(db.String(200), default="(+86)888 8888 8888")
     # friends = db.relationship('FriendListModel', backref='user', uselist=True, foreign_keys=[friends_id])
 
 class FriendListModel(db.Model):
