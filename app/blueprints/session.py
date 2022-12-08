@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 from this import s
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response
 from flask_mail import Message
 from app.blueprints.admin import show_all_user
 from app.blueprints.forms import LoginForm, RegisterForm
@@ -56,7 +56,7 @@ class Message(Resource):
         messages = MessageModel.query.filter(MessageModel.session_id==session_id).order_by(MessageModel.id).all()
         his_messages = []
         for message in messages:
-            his_messages.append({"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
+            his_messages.append({"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
         if len(his_messages) > 50:
             for i in range(0, len(his_messages)-50):
                 his_messages.pop(i)
@@ -74,8 +74,10 @@ class Message(Resource):
         hour=dt.hour
         minute=dt.minute
         second=dt.second
+        type = "text"
         message = MessageModel(content=content, user_id=user_id, session_id=session_id,
-                                year=year, month=month, day=day, hour=hour, min=minute, sec=second)
+                                year=year, month=month, day=day, hour=hour, min=minute, sec=second,
+                                type=type)
         try:
             db.session.add(message)
             db.session.commit()
@@ -83,5 +85,64 @@ class Message(Resource):
         except Exception as e:
             return e, 400
 
+class Upload(Resource):
+    def post(self):
+        file = request.files.get('file')
+        id = request.headers.get('id')
+        print("id",id)
+        filename=file.filename
+        filetype=filename.split(".")[-1]
+        message = MessageModel.query.filter(MessageModel.id==id).first()
+        if filetype == "png" or filetype == "jpg" or filetype == "jpeg":
+            file.save("asset/chat/files/"+id+"."+filetype)
+            type = "image"
+        else:
+            file.save("asset/chat/files/"+id+"."+filetype)
+            type = "file"
+        url = "/api/session/upload?filename="+id+"."+filetype
+        message.type=type
+        message.url=url
+        try:
+            db.session.commit()
+            return "Successfully!", 200
+        except Exception as e:
+            return e, 400
+    def get(self):
+        filename = request.args.get('filename')
+        img_local_path = "./asset/chat/files/" + filename
+        try:
+            img_f = open(img_local_path, 'rb')
+            res = make_response(img_f.read())   # 用flask提供的make_response 方法来自定义自己的response对象
+            res.headers['Content-Type'] = 'image/jpg'   # 设置response对象的请求头属性'Content-Type'为图片格式
+            img_f.close()
+            return res
+        except:
+            return "File not found!", 404
+
+class updateFileContent(Resource):
+    def post(self):
+        session_id = request.json.get("session_id")
+        content = request.json.get("content")
+        user_id = session.get("id")
+        print(session.get("id"))
+        dt= datetime.now()
+        year=dt.year
+        month=dt.month
+        day=dt.day
+        hour=dt.hour
+        minute=dt.minute
+        second=dt.second
+        message = MessageModel(content=content, user_id=user_id, session_id=session_id,
+                                year=year, month=month, day=day, hour=hour, min=minute, sec=second)
+        try:
+            db.session.add(message)
+            db.session.commit()
+            return jsonify({"id": message.id})
+        except Exception as e:
+            return e, 400
+
+
 api.add_resource(SetSession, "/session")
 api.add_resource(Message, "/message")
+api.add_resource(Upload, "/upload")
+api.add_resource(updateFileContent, "/update_file_content")

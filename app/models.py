@@ -48,6 +48,8 @@ class MessageModel(db.Model):
     min = db.Column(db.Integer)
     sec = db.Column(db.Integer)
     state = db.Column(db.Integer)
+    url = db.Column(db.String(200))
+    type = db.Column(db.String(20))
 
 class EmailCaptchaModel(db.Model):
     __tablename__ = "email_captcha"

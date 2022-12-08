@@ -236,7 +236,10 @@ class Friends(Resource):
             user = UserModel.query.filter(UserModel.id==f_id).first()
             session = SessionModel.query.filter(or_(and_(SessionModel.user1_id==id, SessionModel.user2_id==user.id),and_(SessionModel.user2_id==id, SessionModel.user1_id==user.id))).first()
             last_massage = MessageModel.query.filter(MessageModel.session_id==session.id).order_by(-MessageModel.id).first()
-            friends_list.append({"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
+            if last_massage:
+                friends_list.append({"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
+            else:
+                friends_list.append({"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":"","content":"","user":""}})
         return jsonify({"find":len(friends_list),"friends": friends_list})
 
 class Avatar(Resource):
