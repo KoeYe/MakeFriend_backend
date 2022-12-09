@@ -56,7 +56,7 @@ class Message(Resource):
         messages = MessageModel.query.filter(MessageModel.session_id==session_id).order_by(MessageModel.id).all()
         his_messages = []
         for message in messages:
-            his_messages.append({"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
+            his_messages.append({"id":message.id,"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
         if len(his_messages) > 50:
             for i in range(0, len(his_messages)-50):
                 his_messages.pop(i)
@@ -82,6 +82,16 @@ class Message(Resource):
             db.session.add(message)
             db.session.commit()
             return "Send message successfully!", 200
+        except Exception as e:
+            return e, 400
+
+    def delete(self):
+        id = request.values.get("message_id")
+        message = MessageModel.query.filter(MessageModel.id==id).first()
+        try:
+            db.session.delete(message)
+            db.session.commit()
+            return "Delete message successfully!", 200
         except Exception as e:
             return e, 400
 
