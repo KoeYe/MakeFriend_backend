@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 from this import s
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response, send_file
 from flask_mail import Message
 from app.blueprints.admin import show_all_user
 from app.blueprints.forms import LoginForm, RegisterForm
@@ -56,7 +56,7 @@ class Message(Resource):
         messages = MessageModel.query.filter(MessageModel.session_id==session_id).order_by(MessageModel.id).all()
         his_messages = []
         for message in messages:
-            his_messages.append({"id":message.id,"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
+            his_messages.append({"filename":message.filename,"id":message.id,"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
         if len(his_messages) > 50:
             for i in range(0, len(his_messages)-50):
                 his_messages.pop(i)
@@ -106,17 +106,21 @@ class Upload(Resource):
         if filetype == "png" or filetype == "jpg" or filetype == "jpeg":
             file.save("asset/chat/files/"+id+"."+filetype)
             type = "image"
+            url = "/api/session/upload?filename="+id+"."+filetype
         else:
             file.save("asset/chat/files/"+id+"."+filetype)
             type = "file"
-        url = "/api/session/upload?filename="+id+"."+filetype
+            url = "/api/session/upload_file_content?filename="+id+"."+filetype
         message.type=type
+        message.filename=filename
+        print("filename",filename)
         message.url=url
         try:
             db.session.commit()
             return "Successfully!", 200
         except Exception as e:
             return e, 400
+
     def get(self):
         filename = request.args.get('filename')
         img_local_path = "./asset/chat/files/" + filename
@@ -150,6 +154,13 @@ class updateFileContent(Resource):
             return jsonify({"id": message.id})
         except Exception as e:
             return e, 400
+    def get(self):
+        filename = request.args.get('filename')
+        img_local_path = "./asset/chat/files/" + filename
+        try:
+            return send_file(img_local_path, as_attachment=True, attachment_filename=filename)
+        except:
+            return "File not found!", 404
 
 
 api.add_resource(SetSession, "/session")

@@ -50,6 +50,7 @@ class MessageModel(db.Model):
     state = db.Column(db.Integer)
     url = db.Column(db.String(200))
     type = db.Column(db.String(20))
+    filename = db.Column(db.String(200))
 
 class EmailCaptchaModel(db.Model):
     __tablename__ = "email_captcha"
