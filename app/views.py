@@ -24,11 +24,11 @@ class Search(Resource):
             if session_:
                 last_massage = MessageModel.query.filter(MessageModel.session_id==session_.id).order_by(-MessageModel.id).first()
                 if last_massage:
-                    users_ret.append({"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
+                    users_ret.append({"message_number": 0,"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
                 else:
-                    users_ret.append({"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
+                    users_ret.append({"message_number": 0,"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
             else:
-                users_ret.append({"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
+                users_ret.append({"message_number": 0,"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
             if len(users_ret) == 5:
                 break # 只取前5个
         if len(users) == 0:

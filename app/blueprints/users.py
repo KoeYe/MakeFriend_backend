@@ -237,9 +237,14 @@ class Friends(Resource):
             session = SessionModel.query.filter(or_(and_(SessionModel.user1_id==id, SessionModel.user2_id==user.id),and_(SessionModel.user2_id==id, SessionModel.user1_id==user.id))).first()
             last_massage = MessageModel.query.filter(MessageModel.session_id==session.id).order_by(-MessageModel.id).first()
             if last_massage:
-                friends_list.append({"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
+                count = 0;
+                messages = MessageModel.query.filter(and_(MessageModel.session_id==session.id, MessageModel.state==0)).all()
+                for message in messages:
+                    if str(message.user_id) != str(id):
+                        count += 1
+                friends_list.append({"message_number": count,"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
             else:
-                friends_list.append({"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":"","content":"","user":""}})
+                friends_list.append({"message_number": 0,"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":"","content":"","user":""}})
         return jsonify({"find":len(friends_list),"friends": friends_list})
 
 class Avatar(Resource):

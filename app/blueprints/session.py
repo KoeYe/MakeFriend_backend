@@ -52,10 +52,14 @@ class SetSession(Resource):
 class Message(Resource):
     def get(self):
         session_id = request.values.get("session_id")
+        user_id = session.get("id")
         # session = SessionModel.query.filter(SessionModel.id==session_id)
         messages = MessageModel.query.filter(MessageModel.session_id==session_id).order_by(MessageModel.id).all()
         his_messages = []
         for message in messages:
+            if(str(message.user_id) != str(user_id)):
+                message.state = session_id
+                db.session.commit()
             his_messages.append({"filename":message.filename,"id":message.id,"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
         if len(his_messages) > 50:
             for i in range(0, len(his_messages)-50):
@@ -75,9 +79,10 @@ class Message(Resource):
         minute=dt.minute
         second=dt.second
         type = "text"
+        state=0
         message = MessageModel(content=content, user_id=user_id, session_id=session_id,
                                 year=year, month=month, day=day, hour=hour, min=minute, sec=second,
-                                type=type)
+                                type=type, state=state)
         try:
             db.session.add(message)
             db.session.commit()
@@ -146,8 +151,10 @@ class updateFileContent(Resource):
         hour=dt.hour
         minute=dt.minute
         second=dt.second
+        state=0
         message = MessageModel(content=content, user_id=user_id, session_id=session_id,
-                                year=year, month=month, day=day, hour=hour, min=minute, sec=second)
+                                year=year, month=month, day=day, hour=hour, min=minute, sec=second,
+                                state=state)
         try:
             db.session.add(message)
             db.session.commit()
