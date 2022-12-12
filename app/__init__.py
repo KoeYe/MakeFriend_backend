@@ -12,16 +12,17 @@ app = Flask(__name__)
 
 api.init_app(app)
 app.config.from_object('config')
+# cors is not available in this version, because it is not compatible with Nginx
 # CORS(app, supports_credentials=True)
 db.init_app(app)
 
-# manager = Manager(app)
 migrate = Migrate(app, db)
-# manager.add_command('db', MigrateCommand)
 
 mail.init_app(app)
+# socketio is not available in this version
 # socketio.init_app(app)
 
+# mount bp into app
 app.register_blueprint(user_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(session_bp)

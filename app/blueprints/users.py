@@ -1,3 +1,12 @@
+#---------------------------------------------------------------#
+# -*- coding: utf-8 -*-
+# @Time    : 2022/12/15 15:00
+# @Author  : Prosperous
+# @File    : users.py
+# @Software: VSCode
+# @Description: this file is about the user's operation
+# @Version: 1.0
+#----------------------------------------------------------------#
 import random
 from datetime import datetime
 from this import s
@@ -124,7 +133,7 @@ class Login(Resource):
             print("not valid")
             return "Please input form correctly!", 400
 
-
+# 忘记密码
 class ForgetPassword(Resource):
     def post(self):
         try:
@@ -150,6 +159,7 @@ class ForgetPassword(Resource):
         session.permanent = True
         return "Change password successfully!", 200
 
+# 登出
 class Logout(Resource):
     def post(self):
         id = session.get("id")
@@ -163,7 +173,7 @@ class Logout(Resource):
         else:
             return "Logout failed", 400
 
-
+# 用户名
 class UserName(Resource):
     def get(self):
         user_id = request.values.get("id")
@@ -172,6 +182,7 @@ class UserName(Resource):
         username = user.username
         return username, 200
 
+# 好友信息
 class theFriends(Resource):
     def post(self):
         user1_id = str(request.json.get("user1_id"))
@@ -220,6 +231,7 @@ class theFriends(Resource):
         else:
             return "He is not your friend", 400
 
+# 好友列表
 class Friends(Resource):
     def get(self):
         id = request.values.get("user2_id")
@@ -247,6 +259,7 @@ class Friends(Resource):
                 friends_list.append({"message_number": 0,"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":"","content":"","user":""}})
         return jsonify({"find":len(friends_list),"friends": friends_list})
 
+# 用户头像
 class Avatar(Resource):
     def post(self):
         file = request.files.get('file')
@@ -263,6 +276,7 @@ class Avatar(Resource):
         img_f.close()
         return res
 
+# 用户信息
 class Profile(Resource):
     def get(self):
         id = request.args.get('id')

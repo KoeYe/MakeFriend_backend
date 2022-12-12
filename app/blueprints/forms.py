@@ -1,3 +1,12 @@
+#-------------------------------------------------#
+# -*- coding: utf-8 -*-
+# @Time    : 2022/12/15 15:00
+# @Author  : Prosperous
+# @File    : forms.py
+# @Software: VSCode
+# @Description: this file is about the forms of the website
+# @Version: 1.0
+#-------------------------------------------------#
 import wtforms
 from flask_wtf import FlaskForm
 import wtforms_json

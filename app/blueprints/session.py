@@ -1,3 +1,12 @@
+#-----------------------------------------------------------#
+# -*- coding: utf-8 -*-
+# @Time    : 2022/12/15 15:00
+# @Author  : Prosperous
+# @File    : session.py
+# @Software: VSCode
+# @Description: this file is about the session between the users
+# @Version: 1.0
+#-----------------------------------------------------------#
 import random
 from datetime import datetime
 from this import s

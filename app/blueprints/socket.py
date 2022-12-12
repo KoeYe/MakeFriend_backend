@@ -1,3 +1,12 @@
+#-----------------------------------------------------------------------------------------------#
+# -*- coding: utf-8 -*-
+# @Time    : 2022/12/15 15:00
+# @Author  : Prosperous
+# @File    : socket.py
+# @Software: VSCode
+# @Description: this file is about the socket communication between the server and the client
+# @Version: 1.0
+#-----------------------------------------------------------------------------------------------#
 import random
 from datetime import datetime
 from this import s

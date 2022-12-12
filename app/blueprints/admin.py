@@ -1,3 +1,12 @@
+#--------------------------------------#
+# -*- coding: utf-8 -*-
+# @Time    : 2022/12/15 15:00
+# @Author  : Prosperous
+# @File    : admin.py
+# @Software: VSCode
+# @Description: this file is about the admin
+# @Version: 1.0
+#--------------------------------------#
 from app import db
 from flask import Blueprint, request, render_template, redirect, url_for
 from app.models import UserModel

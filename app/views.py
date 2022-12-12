@@ -1,3 +1,12 @@
+#-----------------------------------------------------------#
+# -*- coding: utf-8 -*-
+# @Time    : 2020/12/15 15:00
+# @Author  : Prosperous
+# @File    : views.py
+# @Software: VSCode
+# @Description: this file is about the views
+# @Version: 1.0
+#-----------------------------------------------------------#
 import random
 from datetime import datetime
 from flask import render_template, flash, request, redirect, url_for, jsonify, session
