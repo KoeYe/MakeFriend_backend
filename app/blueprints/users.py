@@ -12,15 +12,16 @@ from datetime import datetime
 from this import s
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response
 from flask_mail import Message
-from app.blueprints.admin import show_all_user
 from app.blueprints.forms import LoginForm, RegisterForm, ProfileForm
 from flask_restful import Resource, Api
 import string
+from util import verifyEmployeeToken, generateToken, decodeToken
+from config import SECRET_KEY
 from app import db, mail
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import and_, or_
 from app.models import EmailCaptchaModel, UserModel, FriendListModel, SessionModel, MessageModel
-
+from authlib.jose import jwt, JoseError
 # 注册了一个bp，名字叫user，前置路径是/user
 bp = Blueprint("user", __name__, url_prefix="/api/user")
 # 将bp挂载到api上
@@ -61,6 +62,7 @@ class Test(Resource):
     def get(self):
         return "test", 200
 
+
 # 注册
 class Register(Resource):
     def post(self):
@@ -98,7 +100,7 @@ class Login(Resource):
             email = request.json.get("email")
             password = request.json.get("password")
             if email == "admin@admin.com" and password == "admin":
-                return "admin", 301
+                return jsonify({"message": "Welcome to administration page!", "id":0, "username": "admin", "code":200})
             user_model = UserModel.query.filter_by(email=email).first()
             if user_model:
                 if check_password_hash(user_model.password, password):
@@ -112,16 +114,14 @@ class Login(Resource):
                         db.session.rollback()
                         raise e
                     id = user_model.id
-                    session["id"] = id
-                    session["username"] = user_model.username
-                    session.permanent = True
-                    print("id in session:",session.get("id"))
+                    print(user_model.email)
+                    token = generateToken(user_model.id)
                     admin = user_model.admin
                     if admin:
-                        return "admin", 301
+                        return jsonify({"token":token,"message": "Welcome to administration page!", "id":0, "username": "admin", "code":200})
                     else:
                         # return jsonify({"code": 200})
-                        return jsonify({"message": "Login successfully!", "id":id, "username": user_model.username, "code":200})
+                        return jsonify({"token":token,"message": "Login successfully!", "id":id, "username": user_model.username, "code":200})
                 else:
                     # print(url_for("user.login"))
                     print("密码不正确")
@@ -161,12 +161,12 @@ class ForgetPassword(Resource):
 
 # 登出
 class Logout(Resource):
+    @verifyEmployeeToken
     def post(self):
-        id = session.get("id")
+        id = decodeToken(request.headers.get("token")).get("id")
         print("id: ", id)
         user = UserModel.query.filter_by(id=id).first()
         if id:
-            session.pop('id')
             user.state = False
             db.session.commit()
             return "Logout successfully!", 200
@@ -175,6 +175,7 @@ class Logout(Resource):
 
 # 用户名
 class UserName(Resource):
+    @verifyEmployeeToken
     def get(self):
         user_id = request.values.get("id")
         print("user_id: ", user_id)
@@ -184,6 +185,7 @@ class UserName(Resource):
 
 # 好友信息
 class theFriends(Resource):
+    @verifyEmployeeToken
     def post(self):
         user1_id = str(request.json.get("user1_id"))
         user2_id = request.json.get("user2_id")
@@ -206,6 +208,7 @@ class theFriends(Resource):
                 return e, 400
             return "Add friend successfully!", 200
 
+    @verifyEmployeeToken
     def get(self):
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
@@ -216,7 +219,7 @@ class theFriends(Resource):
             return 1
         else:
             return 0
-
+    @verifyEmployeeToken
     def delete(self):
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
@@ -233,9 +236,11 @@ class theFriends(Resource):
 
 # 好友列表
 class Friends(Resource):
+    @verifyEmployeeToken
     def get(self):
-        id = request.values.get("user2_id")
-        # print(id)
+        print("token: ", request.headers.get("token"))
+        id = decodeToken(request.headers.get("token")).get("id")
+        print("id: ", id)
         Friends = FriendListModel.query.filter(or_(FriendListModel.user_id==id, FriendListModel.friend_id==id)).all()
         friends_id_list = []
         for friend in Friends:
@@ -244,8 +249,12 @@ class Friends(Resource):
             else:
                 friends_id_list.append(friend.friend_id)
         friends_list = []
+        if len(friends_id_list) == 0:
+            return jsonify({"find":len(friends_list),"friends": friends_list})
         for f_id in friends_id_list:
             user = UserModel.query.filter(UserModel.id==f_id).first()
+            if not user:
+                return "User not found", 400
             session = SessionModel.query.filter(or_(and_(SessionModel.user1_id==id, SessionModel.user2_id==user.id),and_(SessionModel.user2_id==id, SessionModel.user1_id==user.id))).first()
             last_massage = MessageModel.query.filter(MessageModel.session_id==session.id).order_by(-MessageModel.id).first()
             if last_massage:
@@ -261,9 +270,10 @@ class Friends(Resource):
 
 # 用户头像
 class Avatar(Resource):
+    @verifyEmployeeToken
     def post(self):
         file = request.files.get('file')
-        user_id = session.get('id')
+        user_id = decodeToken(request.headers.get("token")).get("id")
         file_name = str(user_id) + ".jpg"
         file.save("./asset/avatar/"+file_name)
         return "Successfully!", 200
@@ -278,6 +288,7 @@ class Avatar(Resource):
 
 # 用户信息
 class Profile(Resource):
+    @verifyEmployeeToken
     def get(self):
         id = request.args.get('id')
         user = UserModel.query.filter(UserModel.id==id).first()
@@ -288,6 +299,7 @@ class Profile(Resource):
             "remarks": user.remarks,
             "place": user.place,
         })
+    @verifyEmployeeToken
     def post(self):
         print(request.json)
         form = ProfileForm.from_json(request.json)

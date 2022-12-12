@@ -3,7 +3,6 @@ from datetime import datetime
 from this import s
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
 from flask_mail import Message
-from app.blueprints.admin import show_all_user
 from app.blueprints.forms import EventForm, TodoListForm
 import string
 from app import db, mail

@@ -19,10 +19,12 @@ import string
 
 from sqlalchemy import or_, and_
 from app.blueprints.forms import CalculatorForm
+from util import verifyEmployeeToken
 from .models import UserModel, EmailCaptchaModel, SessionModel, MessageModel
 api = Api(app)
 
 class Search(Resource):
+    @verifyEmployeeToken
     def post(self):
         search_content = request.json.get("search_content")
         id = session.get('id')
