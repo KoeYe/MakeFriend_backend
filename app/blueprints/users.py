@@ -10,7 +10,7 @@
 import random
 from datetime import datetime
 from this import s
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response, current_app
 from flask_mail import Message
 from app.blueprints.forms import LoginForm, RegisterForm, ProfileForm
 from flask_restful import Resource, Api
@@ -95,16 +95,21 @@ class Register(Resource):
 # 登陆
 class Login(Resource):
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Login - "+str(request.json))
         form = LoginForm.from_json(request.json)
         if form.validate():
             email = request.json.get("email")
+            if not email or email == "":
+                return jsonify({"message": "Please enter your email address!", "code": 400})
             password = request.json.get("password")
+            if not password or password == "":
+                return jsonify({"message": "Please enter your password!", "code": 400})
             if email == "admin@admin.com" and password == "admin":
                 return jsonify({"message": "Welcome to administration page!", "id":0, "username": "admin", "code":200})
             user_model = UserModel.query.filter_by(email=email).first()
             if user_model:
                 if check_password_hash(user_model.password, password):
-                    print("登录成功")
+                    current_app.logger.warning(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Login Successfully! - ")
                     try:
                         print(datetime.now)
                         user_model.state = True  # 更新用户状态
@@ -124,18 +129,20 @@ class Login(Resource):
                         return jsonify({"token":token,"message": "Login successfully!", "id":id, "username": user_model.username, "code":200})
                 else:
                     # print(url_for("user.login"))
-                    print("密码不正确")
-                    return "Email or password incorrect!", 400
+                    current_app.logger.warning(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Login Failed! - ")
+                    return jsonify({"message":"Email or password incorrect!", "code": 400})
             else:
-                return "Email or password incorrect!", 400
+                current_app.logger.warning(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Login Failed! - ")
+                return jsonify({"message":"Email or password incorrect!", "code": 400})
         else:
             # print(url_for("user.login"))
-            print("not valid")
-            return "Please input form correctly!", 400
+            current_app.logger.warning(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Login Failed! - ")
+            return jsonify({"message": "Please enter form", "code": 400})
 
 # 忘记密码
 class ForgetPassword(Resource):
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Forget Password - "+str(request.json))
         try:
             email  = request.json.get('email')
             user = UserModel.query.filter_by(email=email).first()
@@ -163,6 +170,7 @@ class ForgetPassword(Resource):
 class Logout(Resource):
     @verifyEmployeeToken
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Logout - "+str(request.json))
         id = decodeToken(request.headers.get("token")).get("id")
         print("id: ", id)
         user = UserModel.query.filter_by(id=id).first()
@@ -177,6 +185,7 @@ class Logout(Resource):
 class UserName(Resource):
     @verifyEmployeeToken
     def get(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Get Username - "+str(request.values))
         user_id = request.values.get("id")
         print("user_id: ", user_id)
         user = UserModel.query.filter(UserModel.id==user_id).first()
@@ -187,6 +196,7 @@ class UserName(Resource):
 class theFriends(Resource):
     @verifyEmployeeToken
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Make Friend - "+str(request.json))
         user1_id = str(request.json.get("user1_id"))
         user2_id = request.json.get("user2_id")
         if user1_id==user2_id:
@@ -210,6 +220,7 @@ class theFriends(Resource):
 
     @verifyEmployeeToken
     def get(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Get Friends - "+str(request.values))
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
         print("1:",user1_id, "2:",user2_id)
@@ -221,6 +232,7 @@ class theFriends(Resource):
             return 0
     @verifyEmployeeToken
     def delete(self):
+        current_app.logger.warning(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Delete Friend - "+str(request.values))
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
         friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
@@ -238,6 +250,7 @@ class theFriends(Resource):
 class Friends(Resource):
     @verifyEmployeeToken
     def get(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Get Friends - "+str(request.values))
         print("token: ", request.headers.get("token"))
         id = decodeToken(request.headers.get("token")).get("id")
         print("id: ", id)
@@ -272,12 +285,14 @@ class Friends(Resource):
 class Avatar(Resource):
     @verifyEmployeeToken
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Upload Avatar - "+str(request.files))
         file = request.files.get('file')
         user_id = decodeToken(request.headers.get("token")).get("id")
         file_name = str(user_id) + ".jpg"
         file.save("./asset/avatar/"+file_name)
         return "Successfully!", 200
     def get(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Get Avatar - "+str(request.values))
         uid = request.args.get('id')
         img_local_path = "./asset/avatar/" + uid + ".jpg"
         img_f = open(img_local_path, 'rb')
@@ -290,6 +305,7 @@ class Avatar(Resource):
 class Profile(Resource):
     @verifyEmployeeToken
     def get(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Get Profile - "+str(request.values))
         id = request.args.get('id')
         user = UserModel.query.filter(UserModel.id==id).first()
         return jsonify({
@@ -301,6 +317,7 @@ class Profile(Resource):
         })
     @verifyEmployeeToken
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+" - - ["+str(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))+"] Update Profile - "+str(request.json))
         print(request.json)
         form = ProfileForm.from_json(request.json)
         if form.validate():

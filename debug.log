@@ -1,0 +1,219 @@
+2022-12-13 15:30:54,368 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:30:54,379 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:31:53,970 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:32:43,863 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8800
+ * Running on http://192.168.1.104:8800
+2022-12-13 15:32:43,863 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2022-12-13 15:32:43,863 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:32:44,276 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:32:44,287 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:33:04,852 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8800
+ * Running on http://192.168.1.104:8800
+2022-12-13 15:33:04,852 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2022-12-13 15:33:04,853 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:33:05,267 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:33:05,277 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:33:20,260 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:33:20] "[35m[1mPOST /api/user/login HTTP/1.0[0m" 500 -
+2022-12-13 15:33:37,599 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:33:37,711 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:33:38,257 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:33:38,267 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:34:54,034 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:34:54,144 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:34:54,684 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:34:54,696 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:37:42,404 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/__init__.py', reloading
+2022-12-13 15:37:42,556 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:37:43,088 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:37:43,101 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:37:45,766 - app - INFO - Login
+2022-12-13 15:37:45,964 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:37:45] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 15:37:46,039 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:37:46] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:37:46,050 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:37:46] "GET /api/user/avatar?id=2 HTTP/1.0" 200 -
+2022-12-13 15:39:30,007 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:39:30] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:41:15,181 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:41:15] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:41:39,413 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:41:39] "GET /api/user/avatar?id=1 HTTP/1.0" 200 -
+2022-12-13 15:41:39,417 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:41:39] "GET /api/user/profile?id=1 HTTP/1.0" 200 -
+2022-12-13 15:41:41,081 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:41:41] "POST /api/user/logout HTTP/1.0" 200 -
+2022-12-13 15:41:52,161 - app - INFO - Login
+2022-12-13 15:41:52,321 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:41:52] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 15:41:52,355 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:41:52] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:42:56,620 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:42:56] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:43:33,729 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:43:33] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:44:38,200 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:44:38] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:45:25,065 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:45:25] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:46:14,388 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:46:14,499 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:46:15,075 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:46:15,086 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:46:18,209 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:46:18] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:46:19,564 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:46:19] "GET /api/user/profile?id=1 HTTP/1.0" 200 -
+2022-12-13 15:46:21,136 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:46:21] "POST /api/user/logout HTTP/1.0" 200 -
+2022-12-13 15:46:29,706 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:46:29] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 15:46:29,742 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:46:29] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:46:59,552 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:46:59,658 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:47:00,206 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:47:00,221 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:47:03,472 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:47:03] "GET /api/user/profile?id=1 HTTP/1.0" 200 -
+2022-12-13 15:47:05,052 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:47:05] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:47:05,726 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:47:05] "POST /api/user/logout HTTP/1.0" 200 -
+2022-12-13 15:47:14,483 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:47:14] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 15:47:14,521 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:47:14] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:47:53,754 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:47:53,861 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:47:54,370 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:47:54,380 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:48:00,672 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:00] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:48:02,178 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:02] "GET /api/user/profile?id=1 HTTP/1.0" 200 -
+2022-12-13 15:48:03,276 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:03] "POST /api/user/logout HTTP/1.0" 200 -
+2022-12-13 15:48:09,721 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:09] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:48:11,630 - app - INFO - Login{'email': '2826232264@qq.com', 'password': '200212'}
+
+2022-12-13 15:48:11,825 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:11] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 15:48:11,862 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:11] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:48:45,057 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:45] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:48:54,507 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:48:54] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:49:17,192 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:49:17,294 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:49:17,812 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:49:17,822 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:49:21,142 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:49:21] "GET /api/user/profile?id=1 HTTP/1.0" 200 -
+2022-12-13 15:49:22,481 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:49:22] "POST /api/user/logout HTTP/1.0" 200 -
+2022-12-13 15:49:30,393 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:49:30] "[35m[1mPOST /api/user/login HTTP/1.0[0m" 500 -
+2022-12-13 15:49:40,663 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:49:40] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:49:44,090 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:49:44,200 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:49:44,772 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:49:44,782 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:49:50,203 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:49:50] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:49:52,590 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:49:52] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:50:02,947 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:50:03,068 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:50:03,486 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:50:03,495 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:50:04,566 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:50:04] "[35m[1mPOST /api/user/login HTTP/1.0[0m" 500 -
+2022-12-13 15:50:26,732 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:50:26] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:50:29,767 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:50:29,864 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:50:30,377 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:50:30,389 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:50:32,414 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:50:32,519 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:50:32,959 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:50:32,970 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:50:33,651 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:50:33] "[35m[1mPOST /api/user/login HTTP/1.0[0m" 500 -
+2022-12-13 15:50:34,507 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:50:34] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:51:07,306 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:51:07,422 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:51:07,845 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:51:07,855 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:51:09,040 - app - INFO - <built-in method now of type object at 0x10e2e1b78>127.0.0.1Login{'email': '2826232264@qq.com', 'password': '200212'}
+2022-12-13 15:51:09,241 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:51:09] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 15:51:09,279 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:51:09] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:51:20,680 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:51:20] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:51:30,202 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:51:30] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:51:32,606 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:51:32] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:52:06,752 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:52:06] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:52:14,513 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:52:14] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:52:49,269 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:52:49] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:52:56,919 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:52:57,033 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:52:57,575 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:52:57,586 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:53:00,684 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:53:00] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:53:10,204 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:53:10] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:53:12,597 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:53:12] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:53:46,747 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:53:46] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:53:54,514 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:53:54] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:54:29,267 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:29] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:54:32,483 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:54:32,581 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:54:33,131 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:54:33,142 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:54:37,195 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:54:37,305 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:54:37,737 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:54:37,747 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:54:40,414 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:40] "GET /api/user/profile?id=1 HTTP/1.0" 200 -
+2022-12-13 15:54:40,670 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:40] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:54:42,004 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:42] "POST /api/user/logout HTTP/1.0" 200 -
+2022-12-13 15:54:49,082 - app - INFO - 127.0.0.1--[2022/12/13 15:54:49] Login{'email': '2826232264@qq.com', 'password': '200212'}
+2022-12-13 15:54:49,274 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:49] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 15:54:49,310 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:49] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:54:50,216 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:50] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:54:52,614 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:54:52] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:55:26,767 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:55:26] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:55:33,313 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:55:33,422 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:55:33,949 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:55:33,959 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:55:34,523 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:55:34] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:55:38,002 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:55:38,123 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 15:55:38,584 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 15:55:38,597 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 15:56:09,286 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:56:09] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:56:20,684 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:56:20] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:56:29,302 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:56:29] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:56:30,214 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:56:30] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:56:32,609 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:56:32] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:57:06,778 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:57:06] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:57:14,530 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:57:14] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:57:49,280 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:57:49] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:58:00,731 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:58:00] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:58:09,304 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:58:09] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:58:10,216 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:58:10] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:58:12,616 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:58:12] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:58:46,760 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 15:58:46] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 15:58:54,417 - werkzeug - INFO -  * Detected change in '/Users/prosperous/Desktop/CWK2/backend/app/blueprints/users.py', reloading
+2022-12-13 15:58:54,522 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 16:02:33,624 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8800
+ * Running on http://192.168.1.104:8800
+2022-12-13 16:02:33,625 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2022-12-13 16:02:33,625 - werkzeug - INFO -  * Restarting with stat
+2022-12-13 16:02:34,040 - werkzeug - WARNING -  * Debugger is active!
+2022-12-13 16:02:34,050 - werkzeug - INFO -  * Debugger PIN: 141-272-637
+2022-12-13 16:02:43,400 - app - INFO - 127.0.0.1 - - [2022/12/13 16:02:43] Login - {'email': '2826232264@qq.com', 'password': '200212'}
+2022-12-13 16:02:43,598 - app - WARNING - 127.0.0.1 - - [2022/12/13 16:02:43] Login Successfully! - 
+2022-12-13 16:02:43,601 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:02:43] "POST /api/user/login HTTP/1.0" 200 -
+2022-12-13 16:02:43,631 - app - INFO - 127.0.0.1 - - [2022/12/13 16:02:43] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:02:43,638 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:02:43] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:02:49,304 - app - INFO - 127.0.0.1 - - [2022/12/13 16:02:49] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:02:49,312 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:02:49] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:03:00,708 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:00] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:03:00,718 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:00] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:03:09,318 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:09] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:03:09,325 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:09] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:03:10,229 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:10] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:03:10,236 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:10] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:03:12,634 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:12] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:03:12,641 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:12] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:03:14,846 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:14] Get Profile - CombinedMultiDict([ImmutableMultiDict([('id', '1')])])
+2022-12-13 16:03:14,850 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:14] "GET /api/user/profile?id=1 HTTP/1.0" 200 -
+2022-12-13 16:03:36,064 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:36] "POST /api/session/session HTTP/1.0" 200 -
+2022-12-13 16:03:36,123 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:36] Get Avatar - CombinedMultiDict([ImmutableMultiDict([('id', 'undefined')])])
+2022-12-13 16:03:36,133 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:36] "GET /api/user/avatar?id=undefined HTTP/1.0" 200 -
+2022-12-13 16:03:36,137 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:36] Get Friends - CombinedMultiDict([ImmutableMultiDict([('user1_id', 'undefined'), ('user2_id', '1')])])
+2022-12-13 16:03:36,139 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:36] "GET /api/session/session?session_id=6&user_id=1 HTTP/1.0" 200 -
+2022-12-13 16:03:36,146 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:36] "GET /api/user/make_friend?user1_id=undefined&user2_id=1 HTTP/1.0" 200 -
+2022-12-13 16:03:36,156 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:36] Get Friends - CombinedMultiDict([ImmutableMultiDict([('user1_id', '2'), ('user2_id', '1')])])
+2022-12-13 16:03:36,159 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:36] Get Username - CombinedMultiDict([ImmutableMultiDict([('id', '2')])])
+2022-12-13 16:03:36,161 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:36] "GET /api/user/make_friend?user1_id=2&user2_id=1 HTTP/1.0" 200 -
+2022-12-13 16:03:36,162 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:36] "GET /api/user/username?id=2 HTTP/1.0" 200 -
+2022-12-13 16:03:36,245 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:36] "GET /api/session/message?session_id=6 HTTP/1.0" 200 -
+2022-12-13 16:03:46,773 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:46] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:03:46,781 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:46] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:03:54,584 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:54] Get Friends - CombinedMultiDict([ImmutableMultiDict([])])
+2022-12-13 16:03:54,589 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:54] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:03:58,913 - app - INFO - 127.0.0.1 - - [2022/12/13 16:03:58] Logout - {'withCredentials': True}
+2022-12-13 16:03:58,921 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:03:58] "POST /api/user/logout HTTP/1.0" 200 -
+2022-12-13 16:04:23,622 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:04:23] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:04:29,304 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:04:29] "GET /api/user/friends HTTP/1.0" 200 -
+2022-12-13 16:04:40,707 - werkzeug - INFO - 127.0.0.1 - - [13/Dec/2022 16:04:40] "GET /api/user/friends HTTP/1.0" 200 -
