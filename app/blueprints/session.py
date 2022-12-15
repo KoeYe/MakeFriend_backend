@@ -10,7 +10,7 @@
 import random
 from datetime import datetime
 from this import s
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response, send_file
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response, send_file, current_app
 from flask_mail import Message
 from app.blueprints.forms import LoginForm, RegisterForm
 from flask_restful import Resource, Api
@@ -32,6 +32,7 @@ class SetSession(Resource):
     def post(self):
         user1_id = request.json.get('user1_id') #user_1是对面的
         user2_id = request.json.get('user2_id') #user_2是自己
+        current_app.logger.info(str(request.remote_addr)+"][User:"+str(user1_id)+"and User:"+str(user2_id)+" Set Session")
         session = SessionModel.query.filter(or_(and_(SessionModel.user1_id==user1_id, SessionModel.user2_id==user2_id),and_(SessionModel.user1_id==user2_id,SessionModel.user2_id==user1_id))).first()
         if not session:
             session = SessionModel(
@@ -48,6 +49,7 @@ class SetSession(Resource):
         return jsonify({"session_id": session_id, "user1_name": user1.username})
     @verifyEmployeeToken
     def get(self):
+        current_app.logger.info(str(request.remote_addr)+"][Get Session")
         session_id = request.values.get("session_id")
         session_ = SessionModel.query.filter(SessionModel.id==session_id).first()
         user_id = request.values.get("user_id")
@@ -61,6 +63,7 @@ class SetSession(Resource):
 class Message(Resource):
     @verifyEmployeeToken
     def get(self):
+        current_app.logger.info(str(request.remote_addr)+"][Get Message")
         session_id = request.values.get("session_id")
         user_id = decodeToken(request.headers.get("token")).get("id")
         # session = SessionModel.query.filter(SessionModel.id==session_id)
@@ -81,6 +84,7 @@ class Message(Resource):
         content = request.json.get("content")
         user_id = decodeToken(request.headers.get("token")).get("id")
         dt= datetime.now()
+        current_app.logger.info(str(request.remote_addr)+"][User:"+str(user_id)+"Send Message")
         year=dt.year
         month=dt.month
         day=dt.day
@@ -102,6 +106,7 @@ class Message(Resource):
     def delete(self):
         id = request.values.get("message_id")
         message = MessageModel.query.filter(MessageModel.id==id).first()
+        current_app.logger.warning(str(request.remote_addr)+"][Delete Message:"+str(id)+"")
         try:
             db.session.delete(message)
             db.session.commit()
@@ -112,9 +117,10 @@ class Message(Resource):
 class Upload(Resource):
     @verifyEmployeeToken
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+"][Upload ")
         file = request.files.get('file')
         id = request.headers.get('id')
-        print("id",id)
+        # print("id",id)
         filename=file.filename
         filetype=filename.split(".")[-1]
         message = MessageModel.query.filter(MessageModel.id==id).first()
@@ -152,6 +158,7 @@ class Upload(Resource):
 class updateFileContent(Resource):
     @verifyEmployeeToken
     def post(self):
+        current_app.logger.info(str(request.remote_addr)+"][Upload file content")
         session_id = request.json.get("session_id")
         content = request.json.get("content")
         user_id = decodeToken(request.headers.get("token")).get("id")

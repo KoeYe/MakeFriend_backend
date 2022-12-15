@@ -104,7 +104,6 @@ class Login(Resource):
             user_model = UserModel.query.filter_by(email=email).first()
             if user_model:
                 if check_password_hash(user_model.password, password):
-                    current_app.logger.info(str(request.remote_addr)+"][Login Successfully")
                     try:
                         print(datetime.now)
                         user_model.state = True  # 更新用户状态
@@ -118,9 +117,11 @@ class Login(Resource):
                     token = generateToken(user_model.id)
                     admin = user_model.admin
                     if admin:
+                        current_app.logger.info(str(request.remote_addr)+"][User:admin Login Successfully")
                         return jsonify({"token":token,"message": "Welcome to administration page!", "id":0, "username": "admin", "code":200})
                     else:
                         # return jsonify({"code": 200})
+                        current_app.logger.info(str(request.remote_addr)+"][User:"+str(id)+" Login Successfully")
                         return jsonify({"token":token,"message": "Login successfully!", "id":id, "username": user_model.username, "code":200})
                 else:
                     # print(url_for("user.login"))
@@ -158,6 +159,7 @@ class ForgetPassword(Resource):
         user.password = hash_password
         db.session.commit()
         print("修改密码成功")
+        current_app.logger.warning(str(request.remote_addr)+"][User:"+str(user.id)+" Change password successfully")
         session.permanent = True
         return "Change password successfully!", 200
 
@@ -165,8 +167,8 @@ class ForgetPassword(Resource):
 class Logout(Resource):
     @verifyEmployeeToken
     def post(self):
-        current_app.logger.info(str(request.remote_addr)+"][Logout")
         id = decodeToken(request.headers.get("token")).get("id")
+        current_app.logger.info(str(request.remote_addr)+"][User:"+str(id)+" Logout")
         print("id: ", id)
         user = UserModel.query.filter_by(id=id).first()
         if id:
@@ -191,7 +193,6 @@ class UserName(Resource):
 class theFriends(Resource):
     @verifyEmployeeToken
     def post(self):
-        current_app.logger.info(str(request.remote_addr)+"][Make Friends")
         user1_id = str(request.json.get("user1_id"))
         user2_id = request.json.get("user2_id")
         if user1_id==user2_id:
@@ -209,6 +210,7 @@ class theFriends(Resource):
             try:
                 db.session.add(n_friendship)
                 db.session.commit()
+                current_app.logger.info(str(request.remote_addr)+"][User:"+str(user1_id)+" and User:"+str(user2_id)+" Make Friends")
             except Exception as e:
                 return e, 400
             return "Add friend successfully!", 200
@@ -228,9 +230,9 @@ class theFriends(Resource):
 
     @verifyEmployeeToken
     def delete(self):
-        current_app.logger.warning(str(request.remote_addr)+"][Delete Friends")
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
+        current_app.logger.warning(str(request.remote_addr)+"][User:"+str(user1_id)+" and User:"+str(user2_id)+" Delete Friends")
         friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
         if friendship:
             try:
@@ -318,7 +320,6 @@ class Profile(Resource):
         })
     @verifyEmployeeToken
     def post(self):
-        current_app.logger.info(str(request.remote_addr)+"][Update Profile")
         print(request.json)
         form = ProfileForm.from_json(request.json)
         if form.validate():
@@ -336,6 +337,7 @@ class Profile(Resource):
             user.username = username
             try:
                 db.session.commit()
+                current_app.logger.info(str(request.remote_addr)+"][User:"+str(user.id)+" Update Profile")
                 return "Edit Profile Successfully!", 200
             except Exception as e:
                 return e, 400
