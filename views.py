@@ -18,7 +18,6 @@ from flask_restful import Resource, Api
 import string
 
 from sqlalchemy import or_, and_
-from app.blueprints.forms import CalculatorForm
 from util import verifyEmployeeToken
 from .models import UserModel, EmailCaptchaModel, SessionModel, MessageModel
 api = Api(app)
@@ -58,15 +57,6 @@ def index(username, id):
     return render_template('index.html',
                         title = "test",
                         user = user)
-
-@app.route('/calculator', methods=['GET','POST'])
-def calculator():
-    form = CalculatorForm()
-    if form.validate_on_submit():
-        flash('Successfully received form data. %s + %s = %s'%(form.number1.data, form.number2.data, form.number1.data + form.number2.data))
-    return render_template('calculator.html',
-                            title='Calculator',
-                            form = form)
 
 @app.route('/forget_password', methods=['GET', 'POST'])
 def forget_password():

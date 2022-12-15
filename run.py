@@ -6,5 +6,5 @@
 # and the backend server is also used to provide the session for the frontend
 # and the backend server is also used to provide the user management for the frontend
 # and the backend server is also used to provide the admin management for the frontend
-from app import app, socketio
+from app import app
 app.run(debug=True, host='0.0.0.0', port=8800)

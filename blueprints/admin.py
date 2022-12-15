@@ -11,7 +11,7 @@ from app import db
 from flask import Blueprint, request, render_template, redirect, url_for, jsonify, current_app
 from flask_restful import Resource, Api
 import json
-from app.models import UserModel, FriendListModel, SessionModel, MessageModel
+from models import UserModel, FriendListModel, SessionModel, MessageModel
 from sqlalchemy import and_, or_
 
 bp = Blueprint("admin", __name__, url_prefix="/api/admin")

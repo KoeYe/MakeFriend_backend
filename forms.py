@@ -12,10 +12,11 @@ from flask_wtf import FlaskForm
 import wtforms_json
 from wtforms.validators import DataRequired, length, email, EqualTo
 
-from app.models import EmailCaptchaModel, UserModel
+from models import EmailCaptchaModel, UserModel
 # from models import EmailCaptchaModel, UserModel
 
 wtforms_json.init()
+
 class CalculatorForm(FlaskForm):
     number1 = wtforms.IntegerField('number1', validators=[DataRequired()])
     number2 = wtforms.IntegerField('number2', validators=[DataRequired()])
@@ -57,10 +58,3 @@ class ProfileForm(wtforms.Form):
     address = wtforms.StringField(validators=[length(min=1, max=200)])
     place = wtforms.StringField(validators=[length(min=1, max=20)])
     tel = wtforms.StringField(validators=[length(min=1, max=20)])
-
-class EventForm(wtforms.Form):
-    event_name = wtforms.StringField(validators=[length(min=1, max=50)])
-    event_description = wtforms.StringField(validators=[length(min=1, max=500)])
-
-class TodoListForm(wtforms.Form):
-    todo_list_name = wtforms.StringField(validators=[length(min=1, max=50)])

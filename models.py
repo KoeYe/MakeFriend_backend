@@ -9,7 +9,7 @@
 # 8. 定义模型的初始化方法
 # 9. 定义模型的字符串方法
 #-------------------------------------------------#
-from .exts import db
+from exts import db
 from datetime import datetime
 
 class UserModel(db.Model):
@@ -69,4 +69,35 @@ class EmailCaptchaModel(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     captcha = db.Column(db.String(10), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.now)
+
+class GroupModel(db.Model):
+    __tablename__ = "group"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    create_time = db.Column(db.DateTime, default=datetime.now)
+
+class GroupMemberModel(db.Model):
+    __tablename__ = "group_member"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    create_time = db.Column(db.DateTime, default=datetime.now)
+
+class GroupMessageModel(db.Model):
+    __tablename__ = "group_message"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    content = db.Column(db.String(200))
+    year = db.Column(db.Integer)
+    month= db.Column(db.Integer)
+    day = db.Column(db.Integer)
+    hour = db.Column(db.Integer)
+    min = db.Column(db.Integer)
+    sec = db.Column(db.Integer)
+    state = db.Column(db.Integer)
+    url = db.Column(db.String(200))
+    type = db.Column(db.String(20))
+    filename = db.Column(db.String(200))
 

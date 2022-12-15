@@ -3,7 +3,7 @@ from urllib import request
 from flask import jsonify, request
 from authlib.jose import jwt, JoseError
 from config import SECRET_KEY
-from app.models import UserModel
+from models import UserModel
 
 def verifyEmployeeToken(func):
     @wraps(func)

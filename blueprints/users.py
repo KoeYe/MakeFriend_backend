@@ -12,7 +12,7 @@ from datetime import datetime
 from this import s
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response, current_app
 from flask_mail import Message
-from app.blueprints.forms import LoginForm, RegisterForm, ProfileForm
+from forms import LoginForm, RegisterForm, ProfileForm
 from flask_restful import Resource, Api
 import string
 from util import verifyEmployeeToken, generateToken, decodeToken
@@ -20,7 +20,7 @@ from config import SECRET_KEY
 from app import db, mail
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import and_, or_
-from app.models import EmailCaptchaModel, UserModel, FriendListModel, SessionModel, MessageModel
+from models import EmailCaptchaModel, UserModel, FriendListModel, SessionModel, MessageModel
 from authlib.jose import jwt, JoseError
 # 注册了一个bp，名字叫user，前置路径是/user
 bp = Blueprint("user", __name__, url_prefix="/api/user")
@@ -54,9 +54,9 @@ class Captcha(Resource):
                 captcha_model = EmailCaptchaModel(email=email, captcha=captcha)
                 db.session.add(captcha_model)
                 db.session.commit()
-            return "Send captcha successfully!", 200
+            return jsonify({'message':"Send captcha successfully!",'code': 200})
         else:
-            return "Please enter your email address!", 400
+            return jsonify({'message':"Please enter your email address!", 'code':400})
 
 # 注册
 class Register(Resource):
