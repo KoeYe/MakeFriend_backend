@@ -10,7 +10,7 @@
 from app import db
 from flask import Blueprint, request, render_template, redirect, url_for, jsonify
 from flask_restful import Resource, Api
-
+import json
 from app.models import UserModel
 
 bp = Blueprint("admin", __name__, url_prefix="/api/admin")
@@ -50,6 +50,27 @@ class Statistics(Resource):
                 address_number[address.index(user.address)] += 1
         return jsonify({"user_num": len(users), "remarks": remarks, "address": address, "address_number": address_number})
 
+class Log(Resource):
+    def get(self):
+        log = open("./logs/flask.log", "r")
+        log_r = log.read()
+        res = []
+        for line in log_r.split("\n"):
+            if line != "":
+                time = line.split("[")[1].split(",")[0]
+                # print(time)
+                path = line.split("[")[2].split("]")[0]
+                # print(path)
+                level = line.split("[")[3].split("]")[0]
+                # print(level)
+                address = line.split("[")[4].split("]")[0]
+                message = line.split("[")[5].split("]")[0]
+                line_j = {"time": time, "path": path, "level": level, "message": message, "address": address}
+                res.append(line_j)
+        log.close()
+        return jsonify(res)
+
 api.add_resource(Statistics, "/statistics")
 api.add_resource(Users, "/all_users")
+api.add_resource(Log, "/log")
 
