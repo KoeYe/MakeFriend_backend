@@ -82,7 +82,7 @@ class Message(Resource):
             if(str(message.user_id) != str(user_id)):
                 message.state = group_id
                 db.session.commit()
-            his_messages.append({"filename":message.filename,"id":message.id,"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
+            his_messages.append({"filename":message.filename,"id":message.id,"type":message.type,"url":message.url,"content": message.content,"user_avatar":"/api/user/avatar?id=%s" % message.user_id ,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
         if len(his_messages) > 50:
             for i in range(0, len(his_messages)-50):
                 his_messages.pop(i)
@@ -90,7 +90,7 @@ class Message(Resource):
 
     @verifyEmployeeToken
     def post(self):
-        session_id = request.json.get("session_id")
+        group_id = request.json.get("group_id")
         content = request.json.get("content")
         user_id = decodeToken(request.headers.get("token")).get("id")
         dt= datetime.now()
@@ -103,7 +103,7 @@ class Message(Resource):
         second=dt.second
         type = "text"
         state=0
-        message = GroupMessageModel(content=content, user_id=user_id, session_id=session_id,
+        message = GroupMessageModel(content=content, user_id=user_id, group_id=group_id,
                                 year=year, month=month, day=day, hour=hour, min=minute, sec=second,
                                 type=type, state=state)
         try:
