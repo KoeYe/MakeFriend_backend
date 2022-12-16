@@ -374,10 +374,10 @@ class Group(Resource):
                 for message in messages:
                     if str(message.user_id) != str(id):
                         count += 1
-                groups_list.append({"message_number": count,"groupname": group.name, "id": group.id, 'members':members_list,
+                groups_list.append({"message_number": count,"group_name": group.name, "id": group.id, 'members':members_list,
                                     "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
             else:
-                groups_list.append({"message_number": 0,"groupname": group.name, "id": group.id, 'members':members_list,
+                groups_list.append({"message_number": 0,"group_name": group.name, "id": group.id, 'members':members_list,
                                     "last_message": {"date":"","content":"","user":""}})
         current_app.logger.info(str(request.remote_addr)+"][Get Friends Successfully")
         return jsonify({"find":len(groups_list),"groups": groups_list})

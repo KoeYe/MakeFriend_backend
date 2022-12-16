@@ -58,12 +58,7 @@ class Group(Resource):
         current_app.logger.info(str(request.remote_addr)+"][Get Group")
         group_id = request.values.get("group_id")
         group = GroupModel.query.filter(GroupModel.id==group_id).first()
-        user_id = request.values.get("user_id")
-        members  = GroupMemberModel.query.filter(GroupMemberModel.group_id==group_id).all()
-        for member in members:
-            if str(member.user_id) == str(user_id):
-                return jsonify({"group_id":group.id, "user2_id":group.user_id})
-        return jsonify({"group_id":group.id, "user2_id":group.user_id})
+        return jsonify({"group_id":group.id, "user2_id":group.owner_id})
 
 
 class Message(Resource):
