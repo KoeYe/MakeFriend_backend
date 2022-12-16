@@ -42,3 +42,4 @@ app.register_blueprint(user_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(session_bp)
 app.register_blueprint(group_bp)
+
