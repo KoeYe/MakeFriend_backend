@@ -58,7 +58,14 @@ class Group(Resource):
         current_app.logger.info(str(request.remote_addr)+"][Get Group")
         group_id = request.values.get("group_id")
         group = GroupModel.query.filter(GroupModel.id==group_id).first()
-        return jsonify({"group_id":group.id, "user2_id":group.owner_id})
+        if group is None:
+            return jsonify({"message":"group not found"})
+        members_ = GroupMemberModel.query.filter(GroupMemberModel.group_id==group.id).all()
+        members = []
+        for member in members_:
+            user = UserModel.query.filter(UserModel.id==member.user_id).first()
+            members.append({"id":member.user_id, "name":user.username, "avatar": "/api/user/avatar?id=%s" % user.id})
+        return jsonify({"group_id":group.id, "name":group.name, "owner_id":group.owner_id, "members":members})
 
 
 class Message(Resource):

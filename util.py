@@ -9,7 +9,6 @@ def verifyEmployeeToken(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         tokenStr = request.headers.get('token')
-        print(tokenStr)
         # print(request.headers)
         if tokenStr is None:
             return jsonify({'code': 410, 'message': 'Please log in first!'})
