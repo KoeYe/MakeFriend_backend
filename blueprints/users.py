@@ -20,7 +20,7 @@ from config import SECRET_KEY
 from app import db, mail
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import and_, or_
-from models import EmailCaptchaModel, UserModel, FriendListModel, SessionModel, MessageModel
+from models import EmailCaptchaModel, UserModel, FriendListModel, SessionModel, MessageModel, GroupMemberModel, GroupMemberModel, GroupModel, GroupMessageModel
 from authlib.jose import jwt, JoseError
 # 注册了一个bp，名字叫user，前置路径是/user
 bp = Blueprint("user", __name__, url_prefix="/api/user")
@@ -344,6 +344,45 @@ class Profile(Resource):
         else:
             return "Invalid input", 400
 
+
+class Group(Resource):
+    def get(self):
+        current_app.logger.info(str(request.remote_addr)+"][Get Group")
+        id = decodeToken(request.headers.get("token")).get("id")
+        groups = GroupMemberModel.query.filter(GroupMemberModel.user_id==id).all()
+        group_id_list = []
+        for group in groups:
+            group_id_list.append(group.group_id)
+        groups_list = []
+        members_list = []
+        if len(group_id_list) == 0:
+            current_app.logger.info(str(request.remote_addr)+"][Get Group Successfully")
+            return jsonify({"find":len(groups_list),"groups": groups_list})
+        for g_id in group_id_list:
+            #查找group
+            group = GroupModel.query.filter(GroupModel.id==g_id).first()
+            #查找group的成员
+            members = GroupMemberModel.query.filter(GroupMemberModel.group_id==g_id).all()
+            for member in members:
+                user = UserModel.query.filter(UserModel.id==member.user_id).first()
+                members_list.append({"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id})
+            #查找最后一条消息
+            last_massage = GroupMessageModel.query.filter(GroupMessageModel.group_id==group.id).order_by(-GroupMessageModel.id).first()
+            if last_massage:
+                count = 0;
+                messages = GroupMessageModel.query.filter(and_(GroupMessageModel.group_id==group.id, GroupMessageModel.state==0)).all()
+                for message in messages:
+                    if str(message.user_id) != str(id):
+                        count += 1
+                groups_list.append({"message_number": count,"groupname": group.name, "id": group.id, 'members':members_list,
+                                    "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
+            else:
+                groups_list.append({"message_number": 0,"groupname": group.name, "id": group.id, 'members':members_list,
+                                    "last_message": {"date":"","content":"","user":""}})
+        current_app.logger.info(str(request.remote_addr)+"][Get Friends Successfully")
+        return jsonify({"find":len(groups_list),"groups": groups_list})
+
+
 api.add_resource(Captcha, "/captcha")
 api.add_resource(Register, "/register")
 api.add_resource(Login, "/login")
@@ -354,6 +393,7 @@ api.add_resource(theFriends, "/make_friend")
 api.add_resource(Friends, "/friends")
 api.add_resource(Avatar, "/avatar")
 api.add_resource(Profile, "/profile")
+api.add_resource(Group, "/group")
 
 @bp.route("/change_password", methods=['GET', 'POST'])
 def change_password():

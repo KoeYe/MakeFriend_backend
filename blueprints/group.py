@@ -4,7 +4,7 @@
 # @Author  : Prosperous
 # @File    : group.py
 # @Software: VSCode
-# @Description: this file is about the session between the users
+# @Description: this file is about the group
 # @Version: 1.0
 #-----------------------------------------------------------#
 import random
@@ -28,7 +28,7 @@ bp = Blueprint("group", __name__, url_prefix="/api/group")
 api = Api(bp)
 
 
-class SetGroup(Resource):
+class Group(Resource):
     @verifyEmployeeToken
     def post(self):
         users = request.json.get('users')
@@ -40,6 +40,8 @@ class SetGroup(Resource):
             return jsonify({"message":"user not found"})
         group = GroupModel(name=name, owner_id=user2_id, create_time=datetime.now())
         db.session.add(group)
+        group_member = GroupMemberModel(user_id=user2_id, group_id=group.id)
+        db.session.add(group_member)
         db.session.commit()
         for user in users:
             user = UserModel.query.filter(UserModel.id==user).first()
@@ -195,7 +197,7 @@ class updateFileContent(Resource):
         except:
             return "File not found!", 404
 
-api.add_resource(SetGroup, "/group")
+api.add_resource(Group, "/group")
 api.add_resource(Message, "/message")
 api.add_resource(Upload, "/upload")
 api.add_resource(updateFileContent, "/update_file_content")
