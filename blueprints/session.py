@@ -120,7 +120,7 @@ class Upload(Resource):
         current_app.logger.info(str(request.remote_addr)+"][Upload ")
         file = request.files.get('file')
         id = request.headers.get('id')
-        # print("id",id)
+        print("id",id)
         filename=file.filename
         filetype=filename.split(".")[-1]
         message = MessageModel.query.filter(MessageModel.id==id).first()

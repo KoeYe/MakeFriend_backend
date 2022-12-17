@@ -82,10 +82,10 @@ class Register(Resource):
             session['email'] = email
             session['password'] = password
             session.permanent = True
-            return "Register Successfully!", 200
+            return jsonify({'message':"Register successfully!", 'code':200})
         else:
             print("注册失败")
-            return "Register failed!", 400
+            return jsonify({'message':"Register failed!", 'code':400})
 
 # 登陆
 class Login(Resource):
@@ -143,12 +143,12 @@ class ForgetPassword(Resource):
             email  = request.json.get('email')
             user = UserModel.query.filter_by(email=email).first()
         except:
-            return "invalid email address", 400
+            return jsonify({"message": "Please enter your email address!", "code": 400})
         captcha = request.json.get("captcha")
         email = user.email
         captcha_model = EmailCaptchaModel.query.filter_by(email=email).first()
         if not captcha_model or captcha_model.captcha.lower() != captcha.lower():
-            return "Incorrect captcha", 400
+            return jsonify({"message": "Captcha incorrect!", "code": 400})
         new_password = request.json.get("password")
         password_confirm = request.json.get("password_confirm")
         if not new_password == password_confirm:
@@ -161,7 +161,7 @@ class ForgetPassword(Resource):
         print("修改密码成功")
         current_app.logger.warning(str(request.remote_addr)+"][User:"+str(user.id)+" Change password successfully")
         session.permanent = True
-        return "Change password successfully!", 200
+        return jsonify({"message": "Change password successfully!", "code": 200})
 
 # 登出
 class Logout(Resource):
@@ -169,14 +169,13 @@ class Logout(Resource):
     def post(self):
         id = decodeToken(request.headers.get("token")).get("id")
         current_app.logger.info(str(request.remote_addr)+"][User:"+str(id)+" Logout")
-        print("id: ", id)
         user = UserModel.query.filter_by(id=id).first()
         if id:
             user.state = False
             db.session.commit()
-            return "Logout successfully!", 200
+            return jsonify({"message": "Logout successfully!", "code": 200})
         else:
-            return "Logout failed", 400
+            return jsonify({"message": "Logout failed!", "code": 400})
 
 # 用户名
 class UserName(Resource):
@@ -187,7 +186,7 @@ class UserName(Resource):
         print("user_id: ", user_id)
         user = UserModel.query.filter(UserModel.id==user_id).first()
         username = user.username
-        return username, 200
+        return jsonify({"username": username, "code": 200})
 
 # 好友信息
 class theFriends(Resource):

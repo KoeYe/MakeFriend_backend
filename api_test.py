@@ -102,20 +102,40 @@ class TestClass(unittest.TestCase):
         self.assertIn('code', res_dict)
         self.assertEqual(res_dict['code'], 400)
 
-    # def test_register(self):
-    #     self.app.post('/api/user/captcha', data=json.dumps({'email': 'test@test.com', 'operation': 'register'}), content_type='application/json')
-    #     captcha = EmailCaptchaModel.query.filter_by(EmailCaptchaModel.email=='test@test.com').first().captcha
-    #     data = {
-    #         'email': '2826232264@qq.com',
-    #         'password': '200212',
-    #         'captcha': captcha,
-    #         'password_confirm': '200212',
-    #         'username': 'test'
-    #     }
-    #     res = self.app.post('/api/user/register', data=json.dumps(data), content_type='application/json')
-    #     res_dict = json.loads(res.data)
-    #     self.assertIn('code', res_dict)
-    #     self.assertEqual(res_dict['code'], 200)
+    def test_register(self):
+        data = {
+            'email': '',
+            'password': '',
+            'captcha': '',
+        }
+        res = self.app.post('/api/user/register', data=json.dumps(data), content_type='application/json')
+        res_dict = json.loads(res.data)
+        self.assertIn('code', res_dict)
+        self.assertEqual(res_dict['code'], 400)
+
+        data = {
+            'email': '',
+            'password': '',
+            'captcha': '',
+        }
+        res = self.app.post('/api/user/register', data=json.dumps(data), content_type='application/json')
+        res_dict = json.loads(res.data)
+        self.assertIn('code', res_dict)
+        self.assertEqual(res_dict['code'], 400)
+
+    def test_logout(self):
+        res = self.app.post('/api/user/logout')
+        res_dict = json.loads(res.data)
+        self.assertIn('code', res_dict)
+        self.assertEqual(res_dict['code'], 200)
+
+    def test_username(self):
+        res = self.app.get('/api/user/username')
+        res_dict = json.loads(res.data)
+        self.assertIn('code', res_dict)
+        self.assertEqual(res_dict['code'], 200)
+
+
 
 
 if __name__ == '__main__':

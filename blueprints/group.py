@@ -138,11 +138,11 @@ class Upload(Resource):
         if filetype == "png" or filetype == "jpg" or filetype == "jpeg":
             file.save("asset/group/files/"+id+"."+filetype)
             type = "image"
-            url = "/api/session/upload?filename="+id+"."+filetype
+            url = "/api/group/upload?filename="+id+"."+filetype
         else:
             file.save("asset/group/files/"+id+"."+filetype)
             type = "file"
-            url = "/api/session/upload_file_content?filename="+id+"."+filetype
+            url = "/api/group/upload_file_content?filename="+id+"."+filetype
         message.type=type
         message.filename=filename
         print("filename",filename)
@@ -153,7 +153,6 @@ class Upload(Resource):
         except Exception as e:
             return e, 400
 
-    @verifyEmployeeToken
     def get(self):
         filename = request.args.get('filename')
         img_local_path = "./asset/group/files/" + filename
@@ -181,7 +180,7 @@ class updateFileContent(Resource):
         minute=dt.minute
         second=dt.second
         state=0
-        message = GroupMessageModel(content=content, user_id=user_id, session_id=group_id,
+        message = GroupMessageModel(content=content, user_id=user_id, group_id=group_id,
                                 year=year, month=month, day=day, hour=hour, min=minute, sec=second,
                                 state=state)
         try:
