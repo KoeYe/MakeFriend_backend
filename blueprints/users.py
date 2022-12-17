@@ -183,10 +183,12 @@ class UserName(Resource):
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Username")
         user_id = request.values.get("id")
-        print("user_id: ", user_id)
         user = UserModel.query.filter(UserModel.id==user_id).first()
-        username = user.username
-        return jsonify({"username": username, "code": 200})
+        if user:
+            username = user.username
+            return jsonify({"username": username, "code": 200})
+        else:
+            return jsonify({"message": "User not found!", "code": 400})
 
 # 好友信息
 class theFriends(Resource):
@@ -194,12 +196,14 @@ class theFriends(Resource):
     def post(self):
         user1_id = str(request.json.get("user1_id"))
         user2_id = request.json.get("user2_id")
+        if user1_id == None or user2_id == None or user1_id == "" or user2_id == "":
+            return jsonify({"message": "Please enter your id!", "code": 400})
         if user1_id==user2_id:
-            return "You can't make friend with yourself", 400
+            return jsonify({"message": "You can't add yourself as a friend!", "code": 400})
         session_id = request.json.get("session_id")
         friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
         if friendship:
-            return "he/she has been your friend!", 400
+            return jsonify({"message": "You are already friends!", "code": 400})
         else:
             n_friendship = FriendListModel(
                 user_id = user2_id,
@@ -212,14 +216,13 @@ class theFriends(Resource):
                 current_app.logger.info(str(request.remote_addr)+"][User:"+str(user1_id)+" and User:"+str(user2_id)+" Make Friends")
             except Exception as e:
                 return e, 400
-            return "Add friend successfully!", 200
+            return jsonify({"message": "Make friends successfully!", "code": 200})
 
     @verifyEmployeeToken
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Friends")
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
-        print("1:",user1_id, "2:",user2_id)
         friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id),
                                                 and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
         if friendship:
@@ -231,27 +234,26 @@ class theFriends(Resource):
     def delete(self):
         user1_id = request.values.get("user1_id")
         user2_id = request.values.get("user2_id")
+        if user1_id == None or user2_id == None or user1_id == "" or user2_id == "":
+            return jsonify({"message": "Please enter your id!", "code": 400})
         current_app.logger.warning(str(request.remote_addr)+"][User:"+str(user1_id)+" and User:"+str(user2_id)+" Delete Friends")
         friendship = FriendListModel.query.filter(or_(and_(FriendListModel.friend_id==user1_id, FriendListModel.user_id==user2_id), and_(FriendListModel.friend_id==user2_id, FriendListModel.user_id==user1_id))).first()
         if friendship:
             try:
                 db.session.delete(friendship)
                 db.session.commit()
-                return "Delete friend successfully!", 200
+                return jsonify({"message": "Delete friends successfully!", "code": 200})
             except Exception as e:
                 return e, 200
         else:
-            return "He is not your friend", 400
+            return jsonify({"message": "You are not friends!", "code": 400})
 
 # 好友列表
 class Friends(Resource):
     @verifyEmployeeToken
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Friends")
-        print("token: ", request.headers.get("token"))
-        print(request.headers)
         id = decodeToken(request.headers.get("token")).get("id")
-        print("id: ", id)
         Friends = FriendListModel.query.filter(or_(FriendListModel.user_id==id, FriendListModel.friend_id==id)).all()
         friends_id_list = []
         for friend in Friends:
@@ -280,7 +282,7 @@ class Friends(Resource):
             else:
                 friends_list.append({"message_number": 0,"username": user.username, "id": user.id, "avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":"","content":"","user":""}})
         current_app.logger.info(str(request.remote_addr)+"][Get Friends Successfully")
-        return jsonify({"find":len(friends_list),"friends": friends_list})
+        return jsonify({"code":200,"find":len(friends_list),"friends": friends_list})
 
 # 用户头像
 class Avatar(Resource):
@@ -288,10 +290,12 @@ class Avatar(Resource):
     def post(self):
         current_app.logger.info(str(request.remote_addr)+"][Updating Avatar")
         file = request.files.get('file')
+        if not file:
+            return jsonify({"message": "Please upload your avatar!", "code": 400})
         user_id = decodeToken(request.headers.get("token")).get("id")
         file_name = str(user_id) + ".jpg"
         file.save("./asset/avatar/"+file_name)
-        return "Successfully!", 200
+        return jsonify({"message": "Update avatar successfully!", "code": 200})
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Avatar")
         uid = request.args.get('id')
@@ -308,22 +312,31 @@ class Profile(Resource):
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Profile")
         id = request.args.get('id')
-        print(id)
+        if not id:
+            return jsonify({"message": "Please input your id!", "code": 400})
         user = UserModel.query.filter(UserModel.id==id).first()
+        if not user:
+            return jsonify({"message": "User not found!", "code": 400})
         return jsonify({
+            "code" : 200,
             "username" : user.username,
             "address" : user.address,
             "tel" : user.tel,
             "remarks": user.remarks,
             "place": user.place,
         })
+
     @verifyEmployeeToken
     def post(self):
-        print(request.json)
         form = ProfileForm.from_json(request.json)
         if form.validate():
             id = request.json.get('id')
+            if not id or id == "":
+                return jsonify({"message": "Please input your id!", "code": 400})
             user = UserModel.query.filter(UserModel.id==id).first()
+            if not user:
+                return jsonify({"message": "User not found!", "code": 400})
+
             username = form.username.data
             tel = form.tel.data
             address = form.address.data
@@ -337,17 +350,20 @@ class Profile(Resource):
             try:
                 db.session.commit()
                 current_app.logger.info(str(request.remote_addr)+"][User:"+str(user.id)+" Update Profile")
-                return "Edit Profile Successfully!", 200
+                return jsonify({"message": "Update profile successfully!", "code": 200})
             except Exception as e:
-                return e, 400
+                return jsonify({"message": "Update profile failed!", "code": 400})
         else:
-            return "Invalid input", 400
+            return jsonify({"message": "Update profile failed!", "code": 400})
 
 
 class Group(Resource):
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Group")
-        id = decodeToken(request.headers.get("token")).get("id")
+        id = decodeToken(request.headers.get("token"))
+        if not id:
+            return jsonify({"code":410,"message":"Please login!"})
+        id = id.get("id")
         groups = GroupMemberModel.query.filter(GroupMemberModel.user_id==id).all()
         group_id_list = []
         for group in groups:
@@ -356,10 +372,12 @@ class Group(Resource):
         members_list = []
         if len(group_id_list) == 0:
             current_app.logger.info(str(request.remote_addr)+"][Get Group Successfully")
-            return jsonify({"find":len(groups_list),"groups": groups_list})
+            return jsonify({"code":200,"find":len(groups_list),"groups": groups_list})
         for g_id in group_id_list:
             #查找group
             group = GroupModel.query.filter(GroupModel.id==g_id).first()
+            if not group:
+                return jsonify({"code":400,"message":"Group not found!"})
             #查找group的成员
             members = GroupMemberModel.query.filter(GroupMemberModel.group_id==g_id).all()
             for member in members:
@@ -379,7 +397,7 @@ class Group(Resource):
                 groups_list.append({"message_number": 0,"group_name": group.name, "id": group.id, 'members':members_list,
                                     "last_message": {"date":"","content":"","user":""}})
         current_app.logger.info(str(request.remote_addr)+"][Get Friends Successfully")
-        return jsonify({"find":len(groups_list),"groups": groups_list})
+        return jsonify({"code":200,"find":len(groups_list),"groups": groups_list})
 
 
 api.add_resource(Captcha, "/captcha")

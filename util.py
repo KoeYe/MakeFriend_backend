@@ -35,7 +35,10 @@ def generateToken(id):
     tokenStr = str(token, encoding='utf-8')
     return tokenStr
 
-def decodeToken(token):
+def decodeToken(tokenStr):
+    if tokenStr is None:
+        return None
+    token = tokenStr
     token = bytes(token, encoding="utf8")
     payload = jwt.decode(token, SECRET_KEY)
     return payload

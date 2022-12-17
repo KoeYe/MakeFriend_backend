@@ -32,6 +32,14 @@ class SetSession(Resource):
     def post(self):
         user1_id = request.json.get('user1_id') #user_1是对面的
         user2_id = request.json.get('user2_id') #user_2是自己
+        if user1_id is None or user2_id is None or user1_id == "" or user2_id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        if user1_id == user2_id:
+            return jsonify({"error": "Same User",'code': 400})
+        if not UserModel.query.filter(UserModel.id==user1_id).first():
+            return jsonify({"error": "User1 Not Found",'code': 400})
+        if not UserModel.query.filter(UserModel.id==user2_id).first():
+            return jsonify({"error": "User2 Not Found",'code': 400})
         current_app.logger.info(str(request.remote_addr)+"][User:"+str(user1_id)+"and User:"+str(user2_id)+" Set Session")
         session = SessionModel.query.filter(or_(and_(SessionModel.user1_id==user1_id, SessionModel.user2_id==user2_id),and_(SessionModel.user1_id==user2_id,SessionModel.user2_id==user1_id))).first()
         if not session:
@@ -43,28 +51,37 @@ class SetSession(Resource):
             try:
                 db.session.commit()
             except Exception as e:
-                return e, 400
+                return jsonify({"error": "Database Error",'code': 400})
         session_id = session.id
         user1 = UserModel.query.filter(UserModel.id==user1_id).first()
-        return jsonify({"session_id": session_id, "user1_name": user1.username})
+        return jsonify({"code":200,"session_id": session_id, "user1_name": user1.username})
+
     @verifyEmployeeToken
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Session")
         session_id = request.values.get("session_id")
+        if session_id is None or session_id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        if not SessionModel.query.filter(SessionModel.id==session_id).first():
+            return jsonify({"error": "Session Not Found",'code': 400})
         session_ = SessionModel.query.filter(SessionModel.id==session_id).first()
         user_id = request.values.get("user_id")
         print("[get]user_id ",user_id)
         print("[get]session_user1_id ",session_.user1_id)
         if str(user_id) == str(session_.user1_id):
-            return jsonify({"session_id":session_.id, "user1_id": session_.user2_id, "user2_id":session_.user1_id})
+            return jsonify({"code":200,"session_id":session_.id, "user1_id": session_.user2_id, "user2_id":session_.user1_id})
         else:
-            return jsonify({"session_id":session_.id, "user1_id": session_.user1_id, "user2_id":session_.user2_id})
+            return jsonify({"code":200,"session_id":session_.id, "user1_id": session_.user1_id, "user2_id":session_.user2_id})
 
 class Message(Resource):
     @verifyEmployeeToken
     def get(self):
         current_app.logger.info(str(request.remote_addr)+"][Get Message")
         session_id = request.values.get("session_id")
+        if session_id is None or session_id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        if not SessionModel.query.filter(SessionModel.id==session_id).first():
+            return jsonify({"error": "Session Not Found",'code': 400})
         user_id = decodeToken(request.headers.get("token")).get("id")
         # session = SessionModel.query.filter(SessionModel.id==session_id)
         messages = MessageModel.query.filter(MessageModel.session_id==session_id).order_by(MessageModel.id).all()
@@ -74,14 +91,21 @@ class Message(Resource):
                 message.state = session_id
                 db.session.commit()
             his_messages.append({"filename":message.filename,"id":message.id,"type":message.type,"url":message.url,"content": message.content,"user_id": message.user_id, "year": message.year, "month": message.month, "day": message.day, "hour": message.hour, "minute": message.min, "second": message.sec})
-        if len(his_messages) > 50:
-            for i in range(0, len(his_messages)-50):
-                his_messages.pop(i)
-        return jsonify({"messages":his_messages})
+        return jsonify({"code":200,"messages":his_messages})
+
     @verifyEmployeeToken
     def post(self):
         session_id = request.json.get("session_id")
+        if session_id is None or session_id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        if not SessionModel.query.filter(SessionModel.id==session_id).first():
+            return jsonify({"error": "Session Not Found",'code': 400})
         content = request.json.get("content")
+        if content is None or content == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        content_ = content.replace(" ", "")
+        if content_ is None or content == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
         user_id = decodeToken(request.headers.get("token")).get("id")
         dt= datetime.now()
         current_app.logger.info(str(request.remote_addr)+"][User:"+str(user_id)+"Send Message")
@@ -99,20 +123,25 @@ class Message(Resource):
         try:
             db.session.add(message)
             db.session.commit()
-            return "Send message successfully!", 200
+            return jsonify({"code":200,"message_id":message.id})
         except Exception as e:
-            return e, 400
+            return jsonify({"error": "Database Error",'code': 400})
+
     @verifyEmployeeToken
     def delete(self):
         id = request.values.get("message_id")
+        if id is None or id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
         message = MessageModel.query.filter(MessageModel.id==id).first()
+        if message is None:
+            return jsonify({"error": "Message Not Found",'code': 400})
         current_app.logger.warning(str(request.remote_addr)+"][Delete Message:"+str(id)+"")
         try:
             db.session.delete(message)
             db.session.commit()
-            return "Delete message successfully!", 200
+            return jsonify({"code":200,"message":"Delete Success"})
         except Exception as e:
-            return e, 400
+            return jsonify({"error": "Database Error",'code': 400})
 
 class Upload(Resource):
     @verifyEmployeeToken
@@ -120,10 +149,13 @@ class Upload(Resource):
         current_app.logger.info(str(request.remote_addr)+"][Upload ")
         file = request.files.get('file')
         id = request.headers.get('id')
-        print("id",id)
+        if file is None or id is None or id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
         filename=file.filename
         filetype=filename.split(".")[-1]
         message = MessageModel.query.filter(MessageModel.id==id).first()
+        if message is None:
+            return jsonify({"error": "Message Not Found",'code': 400})
         if filetype == "png" or filetype == "jpg" or filetype == "jpeg":
             file.save("asset/chat/files/"+id+"."+filetype)
             type = "image"
@@ -138,9 +170,9 @@ class Upload(Resource):
         message.url=url
         try:
             db.session.commit()
-            return "Successfully!", 200
+            return jsonify({"code":200,"message":"Upload Success"})
         except Exception as e:
-            return e, 400
+            return jsonify({"error": "Database Error",'code': 400})
     @verifyEmployeeToken
     def get(self):
         filename = request.args.get('filename')
@@ -152,7 +184,7 @@ class Upload(Resource):
             img_f.close()
             return res
         except:
-            return "File not found!", 404
+            return jsonify({"error": "File Not Found",'code': 400})
 
 
 class updateFileContent(Resource):
@@ -161,7 +193,16 @@ class updateFileContent(Resource):
         current_app.logger.info(str(request.remote_addr)+"][Upload file content")
         session_id = request.json.get("session_id")
         content = request.json.get("content")
-        user_id = decodeToken(request.headers.get("token")).get("id")
+        user_id = decodeToken(request.headers.get("token"))
+        if session_id is None or session_id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        if not SessionModel.query.filter(SessionModel.id==session_id).first():
+            return jsonify({"error": "Session Not Found",'code': 400})
+        if content is None:
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        if user_id is None or user_id == "":
+            return jsonify({"error": "Missing Parameter",'code': 400})
+        user_id = user_id.get("id")
         dt= datetime.now()
         year=dt.year
         month=dt.month
@@ -176,9 +217,9 @@ class updateFileContent(Resource):
         try:
             db.session.add(message)
             db.session.commit()
-            return jsonify({"id": message.id})
+            return jsonify({"id": message.id,"code":200})
         except Exception as e:
-            return e, 400
+            return jsonify({"error": "Database Error",'code': 400})
     @verifyEmployeeToken
     def get(self):
         filename = request.args.get('filename')
@@ -186,7 +227,7 @@ class updateFileContent(Resource):
         try:
             return send_file(img_local_path, as_attachment=True, attachment_filename=filename)
         except:
-            return "File not found!", 404
+            return jsonify({"error": "File Not Found",'code': 400})
 
 
 api.add_resource(SetSession, "/session")
