@@ -286,7 +286,6 @@ class Friends(Resource):
 
 # 用户头像
 class Avatar(Resource):
-    @verifyEmployeeToken
     def post(self):
         current_app.logger.info(str(request.remote_addr)+"][Updating Avatar")
         file = request.files.get('file')
@@ -398,8 +397,31 @@ class Group(Resource):
                                     "last_message": {"date":"","content":"","user":""}})
         current_app.logger.info(str(request.remote_addr)+"][Get Friends Successfully")
         return jsonify({"code":200,"find":len(groups_list),"groups": groups_list})
+class Search(Resource):
+    @verifyEmployeeToken
+    def post(self):
+        search_content = request.json.get("search_content")
+        id = session.get('id')
+        users = UserModel.query.filter(UserModel.username.like('%{0}%'.format(search_content))).all()
+        users_ret = []
+        for user in users:
+            session_ = SessionModel.query.filter(or_(and_(SessionModel.user1_id==id, SessionModel.user2_id==user.id),and_(SessionModel.user2_id==id, SessionModel.user1_id==user.id))).first()
+            if session_:
+                last_massage = MessageModel.query.filter(MessageModel.session_id==session_.id).order_by(-MessageModel.id).first()
+                if last_massage:
+                    users_ret.append({"message_number": 0,"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(last_massage.year)+"/"+str(last_massage.month)+"/"+str(last_massage.day) ,"content": last_massage.content, "user": last_massage.user_id}})
+                else:
+                    users_ret.append({"message_number": 0,"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
+            else:
+                users_ret.append({"message_number": 0,"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
+            if len(users_ret) == 5:
+                break # 只取前5个
+        if len(users) == 0:
+            return jsonify({"find":0})
+        else:
+            return jsonify({"find":len(users_ret),"users": users_ret})
 
-
+api.add_resource(Search, "/search")
 api.add_resource(Captcha, "/captcha")
 api.add_resource(Register, "/register")
 api.add_resource(Login, "/login")
