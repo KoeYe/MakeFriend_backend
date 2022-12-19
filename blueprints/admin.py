@@ -43,9 +43,9 @@ class Users(Resource):
             for m in message:
                 db.session.delete(m)
                 db.session.commit()
-            return "Delete user successfully!", 200
+            return jsonify({"message": "Delete user successfully!", 'code': 200})
         else:
-            return "Error deleting user!", 404
+            return jsonify({"message": "User not found!", 'code': 404})
 
 class Statistics(Resource):
     def get(self):
@@ -56,7 +56,7 @@ class Statistics(Resource):
         address_number = []
         online_num = 0
         for user in users:
-            if user.state==1:
+            if user.state==True:
                 online_num += 1
             if user.remarks == "0":
                 remarks[0] += 1

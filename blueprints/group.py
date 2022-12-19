@@ -37,7 +37,7 @@ class Group(Resource):
             return jsonify({"message":"user2_id is required", "code":400})
         if users is None or users == "":
             return jsonify({"message":"users is required", "code":400})
-        if len(users) < 3:
+        if len(users) < 2:
             return jsonify({"message":"users is too short", "code":400})
         current_app.logger.info(str(request.remote_addr)+"][User:"+user2_id+" Create Group")
         user2 = UserModel.query.filter(UserModel.id==user2_id).first()

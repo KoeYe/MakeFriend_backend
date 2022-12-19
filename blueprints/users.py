@@ -363,16 +363,18 @@ class Group(Resource):
         if not id:
             return jsonify({"code":410,"message":"Please login!"})
         id = id.get("id")
+        print("Group user id:"+str(id))
         groups = GroupMemberModel.query.filter(GroupMemberModel.user_id==id).all()
         group_id_list = []
         for group in groups:
             group_id_list.append(group.group_id)
+        print(group_id_list)
         groups_list = []
-        members_list = []
         if len(group_id_list) == 0:
             current_app.logger.info(str(request.remote_addr)+"][Get Group Successfully")
             return jsonify({"code":200,"find":len(groups_list),"groups": groups_list})
         for g_id in group_id_list:
+            members_list = []
             #查找group
             group = GroupModel.query.filter(GroupModel.id==g_id).first()
             if not group:
