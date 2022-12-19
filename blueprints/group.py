@@ -49,6 +49,7 @@ class Group(Resource):
             return jsonify({"message":"name is required", "code":400})
         group = GroupModel(name=name, owner_id=user2_id, create_time=datetime.now())
         db.session.add(group)
+        db.session.commit()
         group_member = GroupMemberModel(user_id=user2_id, group_id=group.id)
         db.session.add(group_member)
         db.session.commit()
