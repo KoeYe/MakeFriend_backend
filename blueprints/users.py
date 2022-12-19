@@ -418,10 +418,18 @@ class Search(Resource):
                 users_ret.append({"message_number": 0,"username":user.username,"id": user.id,"avatar": "/api/user/avatar?id=%s" % user.id, "last_message": {"date":str(""),"content":"", "user": ""}})
             if len(users_ret) == 5:
                 break # 只取前5个
-        if len(users) == 0:
+        groups = GroupMemberModel.query.filter(GroupMemberModel.user_id==id).all()
+        groups_list = []
+        for group in groups:
+            members = GroupMemberModel.query.filter(GroupMemberModel.group_id==group.group_id).all()
+            for member in members:
+                user = UserModel.query.filter(UserModel.id==member.user_id).first()
+                users.append({"id":member.user_id, "name":user.username, "avatar": "/api/user/avatar?id=%s" % user.id})
+            groups_list.append({"group_id":group.id, "name":group.name, "owner_id":group.owner_id, "members":users})
+        if len(users) == 0 and len(groups_list) == 0:
             return jsonify({"find":0})
         else:
-            return jsonify({"find":len(users_ret),"users": users_ret})
+            return jsonify({"find":len(users_ret),"users": users_ret, "groups": groups_list})
 
 api.add_resource(Search, "/search")
 api.add_resource(Captcha, "/captcha")
